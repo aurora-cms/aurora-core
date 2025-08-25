@@ -1,0 +1,21 @@
+digraph "Aurora System Context" {
+  graph [rankdir=LR, fontsize=12, label="Aurora Core — System Context", labelloc=t, fontname="Helvetica"];
+  node  [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#f8f9fb"];
+  edge  [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  User   [label="Author / Editor", shape=oval, fillcolor="#e8f0fe"];
+  UI     [label="Admin UI"];
+  API    [label="Aurora API", shape=component];
+  APP    [label="Application Services"];
+  DOM    [label="Domain", shape=folder];
+  INFRA  [label="Infrastructure\n(DB, Search, Files, Queues)", shape=box3d];
+
+  Ext    [label="External Systems\n(IdP, CDN, Webhooks)", shape=oval, fillcolor="#ffe8e8"];
+
+  User -> UI;
+  UI   -> API;
+  API  -> APP;
+  APP  -> DOM;
+  APP  -> INFRA;
+  Ext  -> API;
+}

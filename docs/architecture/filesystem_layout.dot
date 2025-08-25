@@ -1,0 +1,78 @@
+digraph "Aurora Filesystem Layout" {
+  graph [rankdir=LR, fontsize=12, label="Aurora Core — Filesystem Layout", labelloc=t, fontname="Helvetica"];
+  node  [fontname="Helvetica", fontsize=10, shape=folder, style="rounded,filled", fillcolor="#f8f9fb"];
+  edge  [fontname="Helvetica", fontsize=9, color="#555555"];
+
+  subgraph cluster_src {
+    label="src/";
+    style="rounded";
+    color="#cccccc";
+
+    src           [label="src/", shape=folder, fillcolor="#eef7ff"];
+    domain        [label="Domain/"];
+    application   [label="Application/"];
+    infrastructure[label="Infrastructure/"];
+    interface     [label="Interface/"];
+
+    src -> domain;
+    src -> application;
+    src -> infrastructure;
+    src -> interface;
+
+    # Domain children
+    cr            [label="ContentRepository/"];
+    media         [label="Media/"];
+    workflow      [label="Workflow/"];
+    publishing    [label="Publishing/"];
+    identity      [label="IdentityAccess/"];
+
+    domain -> cr;
+    domain -> media;
+    domain -> workflow;
+    domain -> publishing;
+    domain -> identity;
+
+    # Application children (example set)
+    app_cr        [label="ContentRepository/"];
+    app_ellipsis  [label="…", shape=note, fillcolor="#ffffff"];
+
+    application -> app_cr;
+    application -> app_ellipsis;
+
+    # Infrastructure children
+    persistence   [label="Persistence/"];
+    messaging     [label="Messaging/"];
+    files         [label="Files/"];
+
+    infrastructure -> persistence;
+    infrastructure -> messaging;
+    infrastructure -> files;
+
+    # Interface children
+    http          [label="Http/"];
+    cli           [label="Cli/"];
+
+    interface -> http;
+    interface -> cli;
+  }
+
+  subgraph cluster_bundles {
+    label="bundles/";
+    style="rounded";
+    color="#cccccc";
+
+    bundles       [label="bundles/", shape=folder, fillcolor="#fff7e6"];
+
+    aurora_content    [label="AuroraContentBundle/"];
+    aurora_media      [label="AuroraMediaBundle/"];
+    aurora_workflow   [label="AuroraWorkflowBundle/"];
+    aurora_publishing [label="AuroraPublishingBundle/"];
+    aurora_identity   [label="AuroraIdentityBundle/"];
+
+    bundles -> aurora_content;
+    bundles -> aurora_media;
+    bundles -> aurora_workflow;
+    bundles -> aurora_publishing;
+    bundles -> aurora_identity;
+  }
+}
