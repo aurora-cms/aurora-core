@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: none
+          extensions: mbstring, intl, json, xml, ctype, iconv, dom, curl
+      - name: Composer cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: composer-${{ runner.os }}-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ runner.os }}-${{ matrix.php }}-
+      - run: composer install --no-interaction --no-progress
+      - name: Generate container for PHPStan
+        run: |
+          mkdir -p var/phpstan
+          php bin/console debug:container --format=xml > var/phpstan/container.xml
+      - name: Composer normalize
+        run: composer normalize --no-interaction --dry-run
+      - name: PHP-CS-Fixer (dry-run)
+        run: PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --dry-run -v
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+      - name: PHPUnit
+        run: vendor/bin/phpunit --colors=always
