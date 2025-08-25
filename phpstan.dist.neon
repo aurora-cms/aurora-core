@@ -1,0 +1,21 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+    level: max
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    tmpDir: var/phpstan
+    checkGenericClassInNonGenericObjectType: true
+    checkMissingIterableValueType: true
+    reportUnmatchedIgnoredErrors: true
+    symfony:
+    containerXmlPath: var/phpstan/container.xml
+    ignoreErrors:
+        # Example: ignore dynamic service fetch in framework glue code
+        - message: '#Service "\w+" is not registered in the container#'
+          path: src/Infrastructure/.*
