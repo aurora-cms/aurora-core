@@ -16,7 +16,8 @@ require dirname(__DIR__).'/vendor/autoload.php';
 
 (new Dotenv())->bootEnv(dirname(__DIR__).'/.env');
 
-$kernel = new Kernel((string) $_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+$env = is_string($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : 'dev';
+$kernel = new Kernel($env, (bool) $_SERVER['APP_DEBUG']);
 $kernel->boot();
 
 return $kernel->getContainer()->get('doctrine')->getManager();
