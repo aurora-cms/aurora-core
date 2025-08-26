@@ -62,11 +62,11 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "Aurora\\Domain\\": "src/Domain/",
       "Aurora\\Application\\": "src/Application/",
+      "Aurora\\Domain\\": "src/Domain/",
       "Aurora\\Infrastructure\\": "src/Infrastructure/",
-      "Aurora\\Interface\\Http\\": "src/Interface/Http/",
       "Aurora\\Interface\\Cli\\": "src/Interface/Cli/",
+      "Aurora\\Interface\\Http\\": "src/Interface/Http/",
       "Aurora\\Shared\\Kernel\\": "src/Shared/Kernel/"
     }
   },
@@ -105,13 +105,15 @@
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
     },
+    "composer:normalize": "composer normalize",
     "cs:check": "php vendor/bin/php-cs-fixer fix --dry-run -v",
     "cs:fix": "php vendor/bin/php-cs-fixer fix -v",
+    "deptrac": "deptrac analyse",
     "lint:twig": "php bin/console lint:twig templates",
     "lint:yaml": "php bin/console lint:yaml config --parse-tags",
     "qa": [
-      "@validate",
-      "@normalize",
+      "@validate:strict",
+      "@composer:normalize",
       "@cs:check",
       "@stan",
       "@deptrac",
@@ -120,6 +122,6 @@
     "stan": "phpstan analyse --memory-limit=1G",
     "stan:baseline": "phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G",
     "test": "phpunit --colors=always",
-    "deptrac": "deptrac analyse"
+    "validate:strict": "composer validate --strict"
   }
 }
