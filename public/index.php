@@ -9,7 +9,7 @@ declare(strict_types=1);
  * License: MIT
  */
 
-use Aurora\Kernel;
+use Aurora\Shared\Kernel\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 

@@ -32,6 +32,7 @@
     "symfony/yaml": "~7.3.0"
   },
   "require-dev": {
+    "deptrac/deptrac": "^3.0",
     "ergebnis/composer-normalize": "^2.47",
     "friendsofphp/php-cs-fixer": "^3.86",
     "phpstan/extension-installer": "^1.4.3",
@@ -61,7 +62,12 @@
   "prefer-stable": true,
   "autoload": {
     "psr-4": {
-      "Aurora\\": "src/"
+      "Aurora\\Domain\\": "src/Domain/",
+      "Aurora\\Application\\": "src/Application/",
+      "Aurora\\Infrastructure\\": "src/Infrastructure/",
+      "Aurora\\Interface\\Http\\": "src/Interface/Http/",
+      "Aurora\\Interface\\Cli\\": "src/Interface/Cli/",
+      "Aurora\\Shared\\Kernel\\": "src/Shared/Kernel/"
     }
   },
   "autoload-dev": {
@@ -108,10 +114,12 @@
       "@normalize",
       "@cs:check",
       "@stan",
+      "@deptrac",
       "@test"
     ],
     "stan": "phpstan analyse --memory-limit=1G",
     "stan:baseline": "phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G",
-    "test": "phpunit --colors=always"
+    "test": "phpunit --colors=always",
+    "deptrac": "deptrac analyse"
   }
 }
