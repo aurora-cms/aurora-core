@@ -11,6 +11,10 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Exception;
 
-class DomainException extends \RuntimeException
+class PropertyValidationFailed extends \DomainException
 {
+    public function __construct(string $message = 'Property validation failed')
+    {
+        parent::__construct($message);
+    }
 }

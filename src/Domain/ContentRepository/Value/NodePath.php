@@ -9,8 +9,8 @@ declare(strict_types=1);
  * License: MIT
  */
 
-namespace Aurora\Domain\ContentRepository\Exception;
+namespace Aurora\Domain\ContentRepository\Value;
 
-class DomainException extends \RuntimeException
+final class NodePath
 {
 }

@@ -11,6 +11,6 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Exception;
 
-class DomainException extends \RuntimeException
+class WorkspaceMismatch extends \DomainException
 {
 }
