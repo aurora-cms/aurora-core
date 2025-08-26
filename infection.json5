@@ -1,0 +1,16 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src/Application/",
+            "src/Domain/",
+            "src/Infrastructure/",
+            "src/Interface/Cli/",
+            "src/Interface/Http/",
+            "src/Shared/Kernel/"
+        ]
+    },
+    "mutators": {
+        "@default": true
+    }
+}
