@@ -9,7 +9,7 @@ declare(strict_types=1);
  * License: MIT
  */
 
-use Aurora\Kernel;
+use Aurora\Shared\Kernel\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
 
 require dirname(__DIR__).'/vendor/autoload.php';
@@ -20,4 +20,5 @@ $env = is_string($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : 'dev';
 $kernel = new Kernel($env, (bool) $_SERVER['APP_DEBUG']);
 $kernel->boot();
 
+// @phpstan-ignore-next-line
 return $kernel->getContainer()->get('doctrine')->getManager();

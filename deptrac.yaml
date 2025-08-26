@@ -1,0 +1,47 @@
+parameters:
+  paths:
+    - src/
+    - bundles/
+  exclude_files:
+    - '#^vendor/#'
+    - '#^var/#'
+    - '#/tests/#'
+
+  layers:
+    - name: Shared
+      collectors:
+        - type: classNameRegex
+          value: '#^Aurora\\Shared\\.*#'
+
+    - name: Domain
+      collectors:
+        - type: classNameRegex
+          value: '#^Aurora\\Domain\\.*#'
+
+    - name: Application
+      collectors:
+        - type: classNameRegex
+          value: '#^Aurora\\Application\\.*#'
+
+    - name: Interface
+      collectors:
+        - type: classNameRegex
+          value: '#^Aurora\\Interface\\.*#'
+        # if you keep controllers inside *Bundle namespaces, keep this too:
+        - type: classNameRegex
+          value: '#^Aurora\\.+Bundle\\Controller\\.*#'
+
+    - name: Infrastructure
+      collectors:
+        - type: classNameRegex
+          value: '#^Aurora\\Infrastructure\\.*#'
+        # infra-ish classes inside bundles:
+        - type: classNameRegex
+          value: '#^Aurora\\.+Bundle\\(Persistence|Repository|Doctrine|Messenger|Event|EventSubscriber|Command|Security|DataFixtures)\\.*#'
+
+  ruleset:
+    Domain: []
+    Application: ["Domain", "Shared"]
+    Infrastructure: ["Application", "Domain", "Shared"]
+    Interface: ["Application", "Shared"]
+    Shared: []

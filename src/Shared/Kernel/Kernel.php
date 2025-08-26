@@ -9,7 +9,7 @@ declare(strict_types=1);
  * License: MIT
  */
 
-namespace Aurora;
+namespace Aurora\Shared\Kernel;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
