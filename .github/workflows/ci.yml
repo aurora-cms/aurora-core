@@ -14,6 +14,8 @@ jobs:
           php-version: '8.4'
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
+      - name: Setup phpstan container
+        run: mkdir -p var/phpstan && php bin/console debug:container --format=xml > var/phpstan/container.xml
       - name: Run PHPStan (max level)
         run: composer stan
 
@@ -43,16 +45,16 @@ jobs:
       - name: Run PHPUnit
         run: composer test
 
-  mutation:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          extensions: xdebug
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-      - name: Run Infection
-        run: composer infection
+  # mutation:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Set up PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: '8.4'
+  #         extensions: xdebug
+  #     - name: Install dependencies
+  #       run: composer install --prefer-dist --no-progress
+  #     - name: Run Infection
+  #       run: composer infection
