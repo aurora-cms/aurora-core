@@ -2,8 +2,13 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" packagePrefix="Aurora\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" packagePrefix="Aurora\Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Application" isTestSource="false" packagePrefix="Aurora\Application\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Domain" isTestSource="false" packagePrefix="Aurora\Domain\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Infrastructure" isTestSource="false" packagePrefix="Aurora\Infrastructure\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Interface/Cli" isTestSource="false" packagePrefix="Aurora\Interface\Cli\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Interface/Http" isTestSource="false" packagePrefix="Aurora\Interface\Http\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Shared/Kernel" isTestSource="false" packagePrefix="Aurora\Shared\Kernel\" />
       <excludeFolder url="file://$MODULE_DIR$/var" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/clue/ndjson-react" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
@@ -110,6 +115,21 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/var-exporter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/colinodell/json5" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/deptrac/deptrac" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/infection/abstract-testframework-adapter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/infection/extension-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/infection/include-interceptor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/infection/infection" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/infection/mutator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ondram/ci-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sanmai/di-container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sanmai/duoclock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sanmai/later" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sanmai/pipeline" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/thecodingmachine/safe" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
