@@ -14,7 +14,7 @@ namespace Aurora\Domain\ContentRepository\Value;
 /**
  * Value object representing a UUID v4 NodeId.
  */
-final readonly class NodeId
+final readonly class NodeId implements \Stringable
 {
     /**
      * Constructs a NodeId from a string value.
@@ -25,30 +25,26 @@ final readonly class NodeId
      */
     public function __construct(private string $value)
     {
-        if (!self::isValid($value)) {
-            throw new \InvalidArgumentException('Invalid NodeId (UUID v4 expected): '.$value);
+        $v = trim($value);
+        if ('' === $v) {
+            throw new \InvalidArgumentException('NodeId cannot be empty.');
+        }
+
+        if (!preg_match('/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/', $v)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid NodeId format: "%s". Expected UUID v4 format.', $value));
         }
     }
 
-    /**
-     * Validates if the given string is a valid UUID v4.
-     */
-    public static function isValid(string $value): bool
+    public static function fromString(string $value): self
     {
-        return (bool) preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i', $value);
+        return new self($value);
     }
 
-    /**
-     * Returns the NodeId value as string.
-     */
-    public function value(): string
+    public function equals(self $other): bool
     {
-        return $this->value;
+        return $this->value === $other->value;
     }
 
-    /**
-     * Returns the NodeId value as string.
-     */
     public function __toString(): string
     {
         return $this->value;
