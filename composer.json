@@ -35,6 +35,7 @@
     "deptrac/deptrac": "^3.0",
     "ergebnis/composer-normalize": "^2.47",
     "friendsofphp/php-cs-fixer": "^3.86",
+    "infection/infection": "^0.31.2",
     "phpstan/extension-installer": "^1.4.3",
     "phpstan/phpstan": "^2.1.22",
     "phpstan/phpstan-deprecation-rules": "^2.0.3",
@@ -78,6 +79,7 @@
   "config": {
     "allow-plugins": {
       "ergebnis/composer-normalize": true,
+      "infection/extension-installer": true,
       "php-http/discovery": true,
       "phpstan/extension-installer": true,
       "symfony/flex": true,
@@ -109,6 +111,7 @@
     "cs:check": "php vendor/bin/php-cs-fixer fix --dry-run -v",
     "cs:fix": "php vendor/bin/php-cs-fixer fix -v",
     "deptrac": "deptrac analyse",
+    "infection": "vendor/bin/infection --min-msi=70 --threads=2 --log-verbosity=all",
     "lint:twig": "php bin/console lint:twig templates",
     "lint:yaml": "php bin/console lint:yaml config --parse-tags",
     "qa": [
@@ -117,6 +120,7 @@
       "@cs:check",
       "@stan",
       "@deptrac",
+      "@infection",
       "@test"
     ],
     "stan": "phpstan analyse --memory-limit=1G",
