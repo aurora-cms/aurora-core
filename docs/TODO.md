@@ -1,6 +1,6 @@
 # P0 — Foundation & Vertical Slice (ship something end-to-end)
 
-## 1)gi Project skeleton & layering (Baseline)
+## 1) Project skeleton & layering (Baseline)
 
 * [ ] Create bundle skeletons:
 
