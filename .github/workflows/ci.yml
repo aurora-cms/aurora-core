@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
       - name: Run PHPStan (max level)
-        run: vendor/bin/phpstan analyse --level=max --configuration=phpstan.neon --baseline=phpstan-baseline.neon
+        run: composer stan
 
   cs:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
       - name: Check coding style
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php
+        run: composer cs:fix
 
   tests:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
       - name: Run PHPUnit
-        run: vendor/bin/phpunit
+        run: composer test
 
   mutation:
     runs-on: ubuntu-latest
