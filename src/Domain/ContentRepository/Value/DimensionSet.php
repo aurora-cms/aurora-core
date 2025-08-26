@@ -9,36 +9,52 @@ declare(strict_types=1);
  * License: MIT
  */
 
+/**
+ * Represents a set of dimensions in a key-value structure where the dimension keys are normalized
+ * to lowercase and are stripped of whitespace. Implements immutability.
+ */
+
 namespace Aurora\Domain\ContentRepository\Value;
 
-final class DimensionSet
+final readonly class DimensionSet implements \Stringable
 {
     /**
+     * Associative array of dimension name => dimension value.
+     * The dimension keys are normalized to lowercase and trimmed of whitespace.
+     *
      * @var array<string, string>
      */
     private array $values;
 
     /**
-     * @param array<string, string> $values
+     * @param array<string, string> $values Associative array of dimension name => dimension value
      */
     public function __construct(array $values = [])
     {
-        if (!self::isValid($values)) {
-            throw new \InvalidArgumentException('Invalid dimension set values.');
+        $norm = [];
+        foreach ($values as $k => $v) {
+            $key = strtolower(trim($k));
+            if ('' === $key || '' === $v) {
+                throw new \InvalidArgumentException('Dimension name and value cannot be empty.');
+            }
+            if (!preg_match('/^[a-z][a-z0-9_\-]*$/', $key)) {
+                throw new \InvalidArgumentException(\sprintf('Invalid dimension name: "%s". Must start with a letter and contain only letters, numbers, underscores, or hyphens.', $k));
+            }
+            $norm[$key] = $v;
         }
-        ksort($values);
-        $this->values = $values;
+        ksort($norm);
+        $this->values = $norm;
     }
 
-    public static function isValid(array $values): bool
+    public static function empty(): self
     {
-        return array_all($values, fn ($v, $k) => \is_string($k) && '' !== $k && \is_string($v) && '' !== $v);
+        return new self([]);
     }
 
     /**
      * @return array<string, string>
      */
-    public function values(): array
+    public function all(): array
     {
         return $this->values;
     }
@@ -48,22 +64,8 @@ final class DimensionSet
         return $this->values === $other->values;
     }
 
-    public function toKey(): string
-    {
-        if (empty($this->values)) {
-            return '∅';
-        }
-
-        $parts = [];
-        foreach ($this->values as $k => $v) {
-            $parts[] = rawurlencode($k).'='.rawurlencode(\is_scalar($v) || null === $v ? (string) $v : json_encode($v, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-        }
-
-        return implode(';', $parts);
-    }
-
     public function __toString(): string
     {
-        return $this->toKey();
+        return empty($this->values) ? '{}' : '{'.implode(',', $this->values).'}';
     }
 }
