@@ -1,10 +1,17 @@
 <?php
 
-namespace Aurora\Domain\Event;
+declare(strict_types=1);
 
-use DateTimeImmutable;
+/*
+ * This file is part of Aurora Core.
+ *
+ * (c) The Aurora Core contributors
+ * License: MIT
+ */
+
+namespace Aurora\Domain\Event;
 
 interface DomainEvent
 {
-    public function occurredOn(): DateTimeImmutable;
+    public function occurredOn(): \DateTimeImmutable;
 }

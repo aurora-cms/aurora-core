@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class InMemoryWorkspaceRepositoryTest extends TestCase
 {
 
-    public function testSaveAndGetWorkspace()
+    public function testSaveAndGetWorkspace(): void
     {
         $repo = new InMemoryWorkspaceRepository();
         $ws = Workspace::initialize(WorkspaceId::fromString('draft'), DimensionSet::empty(), NodeId::fromString('root-1'), new NodeType('root'));

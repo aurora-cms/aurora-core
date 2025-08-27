@@ -26,7 +26,6 @@ use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\NodePath;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\Event\DomainEvent;
-use InvalidArgumentException;
 
 final class Workspace
 {
@@ -43,41 +42,40 @@ final class Workspace
     /**
      * Constructs a new instance of the class.
      *
-     * @param WorkspaceId $id the unique identifier for the workspace
+     * @param WorkspaceId  $id           the unique identifier for the workspace
      * @param DimensionSet $dimensionSet the set of dimensions associated with the workspace
-     * @param Node $root the root node of the workspace
+     * @param Node         $root         the root node of the workspace
      *
-     * @throws InvalidArgumentException if the root node does not have a root path
-     * @throws InvalidArgumentException if the root node's workspace ID does not match the workspace ID
-     * @throws InvalidArgumentException if the root node's dimension set does not match the workspace dimension set
+     * @throws \InvalidArgumentException if the root node does not have a root path
+     * @throws \InvalidArgumentException if the root node's workspace ID does not match the workspace ID
+     * @throws \InvalidArgumentException if the root node's dimension set does not match the workspace dimension set
      */
     public function __construct(
-        public readonly WorkspaceId  $id,
+        public readonly WorkspaceId $id,
         public readonly DimensionSet $dimensionSet,
-        Node                         $root,
-    )
-    {
+        Node $root,
+    ) {
         if (!$root->path->isRoot()) {
-            throw new InvalidArgumentException('Root node must have root path');
+            throw new \InvalidArgumentException('Root node must have root path');
         }
         if (!$root->workspaceId->equals($this->id)) {
-            throw new InvalidArgumentException('Root workspace mismatch');
+            throw new \InvalidArgumentException('Root workspace mismatch');
         }
         if (!$root->dimensionSet->equals($this->dimensionSet)) {
-            throw new InvalidArgumentException('Root dimension set mismatch');
+            throw new \InvalidArgumentException('Root dimension set mismatch');
         }
         $this->rootId = $root->id;
-        $this->nodes[(string)$root->id] = $root;
-        $this->children[(string)$root->id] = [];
+        $this->nodes[(string) $root->id] = $root;
+        $this->children[(string) $root->id] = [];
     }
 
     /**
      * Initializes a new workspace instance with the given parameters.
      *
-     * @param WorkspaceId $id the unique identifier of the workspace
+     * @param WorkspaceId  $id         the unique identifier of the workspace
      * @param DimensionSet $dimensions the set of dimensions for the workspace
-     * @param NodeId $rootId the identifier of the root node
-     * @param NodeType $rootType the type of the root node
+     * @param NodeId       $rootId     the identifier of the root node
+     * @param NodeType     $rootType   the type of the root node
      *
      * @return self a new instance of the workspace
      */
@@ -109,9 +107,9 @@ final class Workspace
      */
     public function get(NodeId $id): Node
     {
-        $key = (string)$id;
+        $key = (string) $id;
         if (!isset($this->nodes[$key])) {
-            throw new NodeNotFound('Node not found: ' . $key);
+            throw new NodeNotFound('Node not found: '.$key);
         }
 
         return $this->nodes[$key];
@@ -127,7 +125,7 @@ final class Workspace
     public function childrenOf(NodeId $parentId): array
     {
         $result = [];
-        foreach ($this->children[(string)$parentId] ?? [] as $childId) {
+        foreach ($this->children[(string) $parentId] ?? [] as $childId) {
             $result[] = $this->nodes[$childId];
         }
 
@@ -137,11 +135,11 @@ final class Workspace
     /**
      * Creates a new node in the hierarchy.
      *
-     * @param NodeId $id the unique identifier of the node to be created
-     * @param NodeType $type the type of the node to be created
+     * @param NodeId               $id         the unique identifier of the node to be created
+     * @param NodeType             $type       the type of the node to be created
      * @param array<string, mixed> $properties the properties of the node to validate and assign
-     * @param NodeId $parentId the identifier of the parent node under which this node will be created
-     * @param string $segment the unique segment name for the node within its siblings
+     * @param NodeId               $parentId   the identifier of the parent node under which this node will be created
+     * @param string               $segment    the unique segment name for the node within its siblings
      *
      * @throws NodeAlreadyExists if a node with the same segment name already exists within the siblings or if a node with the same ID already exists
      */
@@ -152,7 +150,7 @@ final class Workspace
         // Validate uniqueness within siblings(segment)
         foreach ($this->childrenOf($parentId) as $sibling) {
             if ($sibling->path->name() === strtolower($segment)) {
-                throw new NodeAlreadyExists('Node already exists: ' . $segment);
+                throw new NodeAlreadyExists('Node already exists: '.$segment);
             }
         }
 
@@ -161,22 +159,22 @@ final class Workspace
 
         $path = $parent->path->append($segment);
         $node = new Node($id, $this->id, $this->dimensionSet, $type, $path, $properties);
-        $key = (string)$id;
+        $key = (string) $id;
         if (isset($this->nodes[$key])) {
-            throw new NodeAlreadyExists('Node already exists: ' . $key);
+            throw new NodeAlreadyExists('Node already exists: '.$key);
         }
         $this->nodes[$key] = $node;
         $this->children[$key] = [];
-        $this->children[(string)$parentId][] = $key;
+        $this->children[(string) $parentId][] = $key;
         $this->record(new NodeCreated($this->id, $this->dimensionSet, $id, $parentId, strtolower($segment), $path, $type, $properties));
     }
 
     /**
      * Sets a property on the specified node.
      *
-     * @param NodeId $id identifier of the node to update
-     * @param string $name name of the property to set
-     * @param mixed $value value to assign to the property
+     * @param NodeId $id    identifier of the node to update
+     * @param string $name  name of the property to set
+     * @param mixed  $value value to assign to the property
      *
      * @throws NodeNotFound if the node with the specified ID does not exist
      */
@@ -184,14 +182,14 @@ final class Workspace
     {
         $node = $this->get($id);
         $updated = $node->withProperty($name, $value);
-        $this->nodes[(string)$id] = $updated;
+        $this->nodes[(string) $id] = $updated;
         $this->record(new NodePropertySet($this->id, $this->dimensionSet, $id, $name, $value));
     }
 
     /**
      * Moves a node to a new parent within the tree structure.
      *
-     * @param NodeId $id the identifier of the node to be moved
+     * @param NodeId $id          the identifier of the node to be moved
      * @param NodeId $newParentId the identifier of the new parent node
      *
      * @throws InvalidMove if the node to be moved is the root node
@@ -215,21 +213,21 @@ final class Workspace
         $segment = $node->path->name();
         foreach ($this->childrenOf($newParentId) as $sibling) {
             if ($sibling->path->name() === $segment) {
-                throw new InvalidMove('Node with same name already exists at target location: ' . $segment);
+                throw new InvalidMove('Node with same name already exists at target location: '.$segment);
             }
         }
 
         // Update path for the node and all descendants
-        $oldPath = (string)$node->path;
-        $newPath = (string)$newParent->path->append($segment);
+        $oldPath = (string) $node->path;
+        $newPath = (string) $newParent->path->append($segment);
 
         $oldParent = $this->detachFromParent($id);
-        $this->children[(string)$newParentId][] = (string)$id;
+        $this->children[(string) $newParentId][] = (string) $id;
 
         foreach ($this->nodes as $k => $n) {
-            if (str_starts_with($n->path . '/', $oldPath . '/') || $n->path->equals($node->path)) {
-                $suffix = substr((string)$n->path, \strlen($oldPath));
-                $this->nodes[$k] = $n->withPath(NodePath::fromString($newPath . $suffix));
+            if (str_starts_with($n->path.'/', $oldPath.'/') || $n->path->equals($node->path)) {
+                $suffix = substr((string) $n->path, \strlen($oldPath));
+                $this->nodes[$k] = $n->withPath(NodePath::fromString($newPath.$suffix));
             }
         }
 
@@ -247,8 +245,8 @@ final class Workspace
     /**
      * Removes a node from the structure.
      *
-     * @param NodeId $id the ID of the node to be removed
-     * @param bool $cascade whether to remove the node and its children recursively
+     * @param NodeId $id      the ID of the node to be removed
+     * @param bool   $cascade whether to remove the node and its children recursively
      *
      * @throws RemovingRootNotAllowed thrown when attempting to remove the root node
      * @throws NodeHasChildren        thrown when attempting to remove a node that has children without cascading
@@ -259,11 +257,11 @@ final class Workspace
             throw new RemovingRootNotAllowed('Cannot remove root node');
         }
 
-        $children = $this->children[(string)$id] ?? [];
+        $children = $this->children[(string) $id] ?? [];
         if (!$cascade && !empty($children)) {
             throw new NodeHasChildren('Cannot remove node with children');
         }
-        $idsToRemove = $cascade ? $this->collectSubtreeIds($id) : [(string)$id];
+        $idsToRemove = $cascade ? $this->collectSubtreeIds($id) : [(string) $id];
 
         // Detach from parent
         $this->detachFromParent($id);
@@ -293,11 +291,12 @@ final class Workspace
     {
         foreach ($this->children as $parentKey => &$childList) {
             $before = $childList;
-            $childList = array_values(array_filter($childList, fn($childId) => $childId !== (string)$id));
+            $childList = array_values(array_filter($childList, fn ($childId) => $childId !== (string) $id));
             if ($before !== $childList) {
                 return NodeId::fromString($parentKey);
             }
         }
+
         return null;
     }
 
@@ -310,8 +309,8 @@ final class Workspace
      */
     private function collectSubtreeIds(NodeId $id): array
     {
-        $result = [(string)$id];
-        foreach ($this->children[(string)$id] ?? [] as $childId) {
+        $result = [(string) $id];
+        foreach ($this->children[(string) $id] ?? [] as $childId) {
             $result = array_merge($result, $this->collectSubtreeIds(NodeId::fromString($childId)));
         }
 
@@ -326,14 +325,14 @@ final class Workspace
      * node to confirm the descendant relationship.
      *
      * @param NodeId $candidate the node to check as a potential descendant
-     * @param NodeId $ancestor the node to check as the potential ancestor
+     * @param NodeId $ancestor  the node to check as the potential ancestor
      *
      * @return bool true if the candidate node is a descendant of the ancestor node, false otherwise
      */
     private function isDescendant(NodeId $candidate, NodeId $ancestor): bool
     {
-        foreach ($this->children[(string)$ancestor] ?? [] as $direct) {
-            if ($direct === (string)$candidate) {
+        foreach ($this->children[(string) $ancestor] ?? [] as $direct) {
+            if ($direct === (string) $candidate) {
                 return true;
             }
             if ($this->isDescendant($candidate, NodeId::fromString($direct))) {
@@ -353,6 +352,7 @@ final class Workspace
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 
