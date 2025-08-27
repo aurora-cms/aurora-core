@@ -39,10 +39,14 @@ class ValueTest extends TestCase
         $this->assertEquals('345bf989-2774-4ac3-b117-c7d0dec40675', (string)$nid);
     }
 
-    public function testNodeIdToStringIncorrect(): void
+    public function testNodeIdToStringIncorrectInvalidId(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new NodeId('invalid id!');
+    }
+
+    public function testNodeIdToStringIncorrectShortId(): void
+    {
         $this->expectException(\InvalidArgumentException::class);
         new NodeId('a');
     }
