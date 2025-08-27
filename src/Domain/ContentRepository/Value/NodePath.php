@@ -17,7 +17,7 @@ use Aurora\Domain\ContentRepository\Exception\NodePathInvalid;
  * Regular expression for valid node path segments.
  * Must start with a lowercase letter or digit, followed by lowercase letters, digits, underscores, or hyphens.
  */
-const PATH_REGEX = '/^[a-z0-9][a-za0-9_\-]*$/';
+const PATH_REGEX = '/^[a-z0-9][a-z0-9_\-]*$/';
 
 /**
  * Represents a canonical node path in the content repository.
