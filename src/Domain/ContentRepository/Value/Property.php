@@ -11,8 +11,19 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Value;
 
+/**
+ * Represents a property with a name and value.
+ *
+ * @readonly
+ */
 final readonly class Property
 {
+    /**
+     * Property constructor.
+     *
+     * @param string $name  The name of the property.
+     * @param mixed  $value The value of the property.
+     */
     public function __construct(public string $name, public mixed $value)
     {
     }
