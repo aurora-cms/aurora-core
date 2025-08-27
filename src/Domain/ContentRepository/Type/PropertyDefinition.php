@@ -12,9 +12,22 @@ declare(strict_types=1);
 namespace Aurora\Domain\ContentRepository\Type;
 
 use Aurora\Domain\ContentRepository\Exception\PropertyValidationFailed;
+use InvalidArgumentException;
 
+/**
+ * Defines a property for content repository types.
+ *
+ * @readonly
+ */
 final readonly class PropertyDefinition
 {
+    /**
+     * @param string $name Property name (alphanumeric and underscores only)
+     * @param PropertyType $type Property type
+     * @param bool $nullable Whether the property can be null
+     * @param bool $multiple Whether the property can hold multiple values (array)
+     * @throws InvalidArgumentException If the property name format is invalid
+     */
     public function __construct(
         public string $name,
         public PropertyType $type,
@@ -22,15 +35,22 @@ final readonly class PropertyDefinition
         public bool $multiple = false,
     ) {
         if (!preg_match('/^[a-zA-Z0-9_]*$/', $name)) {
-            throw new \InvalidArgumentException('Property name format invalid: '.$name);
+            throw new InvalidArgumentException('Property name format invalid: '.$name);
         }
     }
 
+    /**
+     * Validates a value against the property definition.
+     *
+     * @param mixed $value The value to validate
+     * @throws InvalidArgumentException If the value is null and not allowed
+     * @throws PropertyValidationFailed If the value does not match the property type
+     */
     public function validate(mixed $value): void
     {
         if (null === $value) {
             if (!$this->nullable) {
-                throw new \InvalidArgumentException(\sprintf('Property "%s" is not nullable.', $this->name));
+                throw new InvalidArgumentException(\sprintf('Property "%s" is not nullable.', $this->name));
             }
 
             return;
