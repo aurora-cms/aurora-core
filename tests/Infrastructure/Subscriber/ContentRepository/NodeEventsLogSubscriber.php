@@ -13,7 +13,6 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 {
     public function __construct(private LoggerInterface $logger)
     {
-
     }
 
     public static function getSubscribedEvents(): array
