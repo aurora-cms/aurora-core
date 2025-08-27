@@ -1,8 +1,15 @@
 <?php
 
-namespace Aurora\Domain\Event;
+declare(strict_types=1);
 
-use DateTimeImmutable;
+/*
+ * This file is part of Aurora Core.
+ *
+ * (c) The Aurora Core contributors
+ * License: MIT
+ */
+
+namespace Aurora\Domain\Event;
 
 /**
  * Abstract base class for domain events.
@@ -13,22 +20,20 @@ abstract readonly class AbstractEvent implements DomainEvent
     /**
      * The date and time when the event occurred.
      */
-    private DateTimeImmutable $occurredOn;
+    private \DateTimeImmutable $occurredOn;
 
     /**
      * Initializes the event with the current date and time.
      */
     public function __construct()
     {
-        $this->occurredOn = new DateTimeImmutable();
+        $this->occurredOn = new \DateTimeImmutable();
     }
 
     /**
      * Returns the date and time when the event occurred.
-     *
-     * @return DateTimeImmutable
      */
-    public function occurredOn(): DateTimeImmutable
+    public function occurredOn(): \DateTimeImmutable
     {
         return $this->occurredOn;
     }

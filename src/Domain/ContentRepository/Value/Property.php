@@ -21,8 +21,8 @@ final readonly class Property
     /**
      * Property constructor.
      *
-     * @param string $name  The name of the property.
-     * @param mixed  $value The value of the property.
+     * @param string $name  the name of the property
+     * @param mixed  $value the value of the property
      */
     public function __construct(public string $name, public mixed $value)
     {
