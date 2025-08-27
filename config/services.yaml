@@ -18,3 +18,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    Aurora\Infrastructure\Event\SymfonyEventDispatcherAdapter:
+        arguments: ['@event_dispatcher']
+
+    Aurora\Application\Event\EventDispatcher: '@Aurora\Infrastructure\Event\SymfonyEventDispatcherAdapter'
+
+    Aurora\Infrastructure\Subscriber\ContentRepository\NodeEventsLogSubscriber:
+        tags: ['kernel.event_subscriber']
