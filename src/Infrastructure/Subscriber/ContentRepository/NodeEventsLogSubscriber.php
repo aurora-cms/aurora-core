@@ -1,6 +1,6 @@
 <?php
 
-namespace Aurora\Tests\Infrastructure\Subscriber\ContentRepository;
+namespace Aurora\Infrastructure\Subscriber\ContentRepository;
 
 use Aurora\Domain\ContentRepository\Event\NodeCreated;
 use Aurora\Domain\ContentRepository\Event\NodeMoved;
