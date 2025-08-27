@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Aurora\Domain\ContentRepository\Value;
 
 use Aurora\Domain\ContentRepository\Exception\NodePathInvalid;
-use Stringable;
 
 /**
  * Regular expression for valid node path segments.
@@ -24,7 +23,7 @@ const PATH_REGEX = '/^[a-z0-9][a-za0-9_\-]*$/';
  * Represents a canonical node path in the content repository.
  * Paths are always absolute, start with '/', and do not have trailing slashes except for the root node.
  */
-final class NodePath implements Stringable
+final class NodePath implements \Stringable
 {
     /**
      * @var string Canonical path, e.g. /parent/child/node (no trailing slash, except for root node "/")
@@ -34,7 +33,7 @@ final class NodePath implements Stringable
     /**
      * Constructs a NodePath instance.
      *
-     * @param string $path Canonical path string.
+     * @param string $path canonical path string
      */
     private function __construct(string $path)
     {
@@ -43,8 +42,6 @@ final class NodePath implements Stringable
 
     /**
      * Returns the root node path ("/").
-     *
-     * @return self
      */
     public static function root(): self
     {
@@ -54,9 +51,7 @@ final class NodePath implements Stringable
     /**
      * Creates a NodePath from a string, validating its format.
      *
-     * @param string $path
-     * @return self
-     * @throws NodePathInvalid If the path is invalid.
+     * @throws NodePathInvalid if the path is invalid
      */
     public static function fromString(string $path): self
     {
@@ -83,9 +78,7 @@ final class NodePath implements Stringable
     /**
      * Appends a segment to the current node path.
      *
-     * @param string $segment
-     * @return self
-     * @throws NodePathInvalid If the segment is invalid.
+     * @throws NodePathInvalid if the segment is invalid
      */
     public function append(string $segment): self
     {
@@ -100,8 +93,6 @@ final class NodePath implements Stringable
     /**
      * Returns the parent node path.
      * If called on the root node, returns itself.
-     *
-     * @return self
      */
     public function parent(): self
     {
@@ -119,8 +110,6 @@ final class NodePath implements Stringable
     /**
      * Returns the name of the node (last segment of the path).
      * Returns an empty string for the root node.
-     *
-     * @return string
      */
     public function name(): string
     {
@@ -129,8 +118,6 @@ final class NodePath implements Stringable
 
     /**
      * Checks if the node path is the root node.
-     *
-     * @return bool
      */
     public function isRoot(): bool
     {
@@ -139,9 +126,6 @@ final class NodePath implements Stringable
 
     /**
      * Checks if the current path starts with another node path.
-     *
-     * @param self $other
-     * @return bool
      */
     public function startsWith(self $other): bool
     {
@@ -150,9 +134,6 @@ final class NodePath implements Stringable
 
     /**
      * Checks if the current path is equal to another node path.
-     *
-     * @param self $other
-     * @return bool
      */
     public function equals(self $other): bool
     {
@@ -161,8 +142,6 @@ final class NodePath implements Stringable
 
     /**
      * Returns the canonical path as a string.
-     *
-     * @return string
      */
     public function __toString(): string
     {

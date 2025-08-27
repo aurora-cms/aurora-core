@@ -11,17 +11,14 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Value;
 
-use InvalidArgumentException;
-use Stringable;
-
 /**
- * A single dimension set, e.g. ['locale' => 'en_US', 'device' => 'mobile', 'channel' => 'web']
+ * A single dimension set, e.g. ['locale' => 'en_US', 'device' => 'mobile', 'channel' => 'web'].
  *
  * This class represents an immutable set of dimensions as key-value pairs.
  * Dimension keys are normalized to lowercase and trimmed of whitespace.
  * Invalid or empty dimension names/values are not allowed.
  */
-final readonly class DimensionSet implements Stringable
+final readonly class DimensionSet implements \Stringable
 {
     /**
      * Associative array of dimension name => dimension value.
@@ -34,8 +31,9 @@ final readonly class DimensionSet implements Stringable
     /**
      * DimensionSet constructor.
      *
-     * @param array<string, string> $values Associative array of dimension name => dimension value.
-     * @throws InvalidArgumentException If a dimension name or value is empty or invalid.
+     * @param array<string, string> $values associative array of dimension name => dimension value
+     *
+     * @throws \InvalidArgumentException if a dimension name or value is empty or invalid
      */
     public function __construct(array $values = [])
     {
@@ -43,10 +41,10 @@ final readonly class DimensionSet implements Stringable
         foreach ($values as $k => $v) {
             $key = strtolower(trim($k));
             if ('' === $key || '' === $v) {
-                throw new InvalidArgumentException('Dimension name and value cannot be empty.');
+                throw new \InvalidArgumentException('Dimension name and value cannot be empty.');
             }
             if (!preg_match('/^[a-z][a-z0-9_\-]*$/', $key)) {
-                throw new InvalidArgumentException(\sprintf('Invalid dimension name: "%s". Must start with a letter and contain only letters, numbers, underscores, or hyphens.', $k));
+                throw new \InvalidArgumentException(\sprintf('Invalid dimension name: "%s". Must start with a letter and contain only letters, numbers, underscores, or hyphens.', $k));
             }
             $norm[$key] = $v;
         }
@@ -56,8 +54,6 @@ final readonly class DimensionSet implements Stringable
 
     /**
      * Returns an empty DimensionSet.
-     *
-     * @return self
      */
     public static function empty(): self
     {
@@ -76,9 +72,6 @@ final readonly class DimensionSet implements Stringable
 
     /**
      * Checks if this DimensionSet is equal to another.
-     *
-     * @param self $other
-     * @return bool
      */
     public function equals(self $other): bool
     {
@@ -87,11 +80,9 @@ final readonly class DimensionSet implements Stringable
 
     /**
      * Returns a string representation of the DimensionSet.
-     *
-     * @return string
      */
     public function __toString(): string
     {
-        return empty($this->values) ? '{}' : '{' . implode(';', array_map(fn(string $k, string $v) => "$k=$v", array_keys($this->values), $this->values)) . '}';
+        return empty($this->values) ? '{}' : '{'.implode(';', array_map(fn (string $k, string $v) => "$k=$v", array_keys($this->values), $this->values)).'}';
     }
 }

@@ -12,11 +12,9 @@ declare(strict_types=1);
 namespace Aurora\Domain\ContentRepository\Type;
 
 /**
- * Enum PropertyType
+ * Enum PropertyType.
  *
  * Represents the supported property types in the content repository.
- *
- * @package Aurora\Domain\ContentRepository\Type
  */
 enum PropertyType: string
 {
