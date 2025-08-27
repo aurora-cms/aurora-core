@@ -11,39 +11,35 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Value;
 
-use InvalidArgumentException;
-use Stringable;
-
 /**
  * Represents a unique identifier for a workspace.
  *
  * @readonly
  */
-final readonly class WorkspaceId implements Stringable
+final readonly class WorkspaceId implements \Stringable
 {
     /**
      * Constructs a WorkspaceId.
      *
-     * @param string $value The workspace identifier.
-     * @throws InvalidArgumentException If the value is empty or has an invalid format.
+     * @param string $value the workspace identifier
+     *
+     * @throws \InvalidArgumentException if the value is empty or has an invalid format
      */
     public function __construct(private string $value)
     {
         if ('' === trim($value)) {
-            throw new InvalidArgumentException('WorkspaceId cannot be empty.');
+            throw new \InvalidArgumentException('WorkspaceId cannot be empty.');
         }
 
         if (!preg_match('/^[A-Za-z0-9_\-]{2,}$/', $value)) {
-            throw new InvalidArgumentException('WorkspaceId format invalid');
+            throw new \InvalidArgumentException('WorkspaceId format invalid');
         }
     }
 
     /**
      * Creates a WorkspaceId from a string.
      *
-     * @param string $value
-     * @return self
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public static function fromString(string $value): self
     {
@@ -52,9 +48,6 @@ final readonly class WorkspaceId implements Stringable
 
     /**
      * Checks if this WorkspaceId is equal to another.
-     *
-     * @param self $other
-     * @return bool
      */
     public function equals(self $other): bool
     {
@@ -63,8 +56,6 @@ final readonly class WorkspaceId implements Stringable
 
     /**
      * Returns the string representation of the WorkspaceId.
-     *
-     * @return string
      */
     public function __toString(): string
     {

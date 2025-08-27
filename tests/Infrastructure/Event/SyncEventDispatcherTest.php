@@ -8,6 +8,7 @@ use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\NodePath;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
+use Aurora\Domain\Event\DomainEvent;
 use Aurora\Infrastructure\Event\SyncEventDispatcher;
 use PHPUnit\Framework\TestCase;
 
@@ -16,9 +17,10 @@ final class SyncEventDispatcherTest extends TestCase
     public function testDispatchToSubscribedListener(): void
     {
         $bus = new SyncEventDispatcher();
+        /** @var string[] $received */
         $received = [];
         $bus->subscribe(NodeCreated::class,
-            function ($e) use (&$received) {
+            function (NodeCreated $e) use (&$received) {
                 $received[] = $e->nodeId;
             }
         );
@@ -43,7 +45,7 @@ final class SyncEventDispatcherTest extends TestCase
         $bus = new SyncEventDispatcher();
         $order = [];
         $bus->subscribe(NodeCreated::class,
-            function ($e) use (&$order) {
+            function (NodeCreated $e) use (&$order): void {
                 $order[] = (string)$e->nodeId;
             }
         );
@@ -79,8 +81,8 @@ final class SyncEventDispatcherTest extends TestCase
     {
         $bus = new SyncEventDispatcher();
         $count = 0;
-        $bus->subscribe('*',
-            function ($e) use (&$count) {
+        $bus->subscribe(DomainEvent::class,
+            function ($e) use (&$count): void {
                 $count++;
             }
         );

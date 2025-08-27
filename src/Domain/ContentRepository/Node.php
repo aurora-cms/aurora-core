@@ -27,12 +27,12 @@ final readonly class Node
     /**
      * Constructs a new Node instance.
      *
-     * @param NodeId $id Unique identifier for the node.
-     * @param WorkspaceId $workspaceId Workspace identifier.
-     * @param DimensionSet $dimensionSet Set of dimensions for the node.
-     * @param NodeType $type Type definition of the node.
-     * @param NodePath $path Path of the node in the repository.
-     * @param array<string, mixed> $properties Custom properties for the node.
+     * @param NodeId               $id           unique identifier for the node
+     * @param WorkspaceId          $workspaceId  workspace identifier
+     * @param DimensionSet         $dimensionSet set of dimensions for the node
+     * @param NodeType             $type         type definition of the node
+     * @param NodePath             $path         path of the node in the repository
+     * @param array<string, mixed> $properties   custom properties for the node
      */
     public function __construct(
         public NodeId $id,
@@ -48,9 +48,8 @@ final readonly class Node
      * Returns a new Node instance with the given property set.
      * Validates the property value against the node type definition.
      *
-     * @param string $name Property name.
-     * @param mixed $value Property value.
-     * @return self
+     * @param string $name  property name
+     * @param mixed  $value property value
      */
     public function withProperty(string $name, mixed $value): self
     {
@@ -64,8 +63,7 @@ final readonly class Node
     /**
      * Returns a new Node instance with the given path.
      *
-     * @param NodePath $path New path for the node.
-     * @return self
+     * @param NodePath $path new path for the node
      */
     public function withPath(NodePath $path): self
     {

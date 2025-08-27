@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Aurora Core.
+ *
+ * (c) The Aurora Core contributors
+ * License: MIT
+ */
+
 namespace Aurora\Infrastructure\Persistence\ContentRepository;
 
 use Aurora\Application\ContentRepository\WorkspaceRepository;
@@ -19,11 +28,11 @@ class InMemoryWorkspaceRepository implements WorkspaceRepository
 
     private function key(WorkspaceId $id, DimensionSet $dimensionSet): string
     {
-        return $id . '|' . $dimensionSet;
+        return $id.'|'.$dimensionSet;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function save(Workspace $workspace): void
     {
@@ -31,7 +40,7 @@ class InMemoryWorkspaceRepository implements WorkspaceRepository
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function get(WorkspaceId $id, DimensionSet $dimensionSet): Workspace
     {
@@ -39,11 +48,12 @@ class InMemoryWorkspaceRepository implements WorkspaceRepository
         if (!isset($this->store[$key])) {
             throw new WorkspaceNotFound("Workspace not found for ID {$id} and dimensions {$dimensionSet}");
         }
+
         return $this->store[$key];
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function exists(WorkspaceId $id, DimensionSet $dimensionSet): bool
     {
