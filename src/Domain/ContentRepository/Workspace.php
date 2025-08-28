@@ -34,6 +34,8 @@ final class Workspace
     /** @var array<string,array<string>> childId lists keyed by parent id */
     private array $children = [];
     private NodeId $rootId;
+    /** @var array<string,string> map path => nodeId */
+    private array $pathIndex = [];
     /**
      * @var array<DomainEvent>
      */
@@ -67,6 +69,7 @@ final class Workspace
         $this->rootId = $root->id;
         $this->nodes[(string) $root->id] = $root;
         $this->children[(string) $root->id] = [];
+        $this->pathIndex[(string) $root->path] = $root->id;
     }
 
     /**
@@ -141,7 +144,8 @@ final class Workspace
      * @param NodeId               $parentId   the identifier of the parent node under which this node will be created
      * @param string               $segment    the unique segment name for the node within its siblings
      *
-     * @throws NodeAlreadyExists if a node with the same segment name already exists within the siblings or if a node with the same ID already exists
+     * @throws NodeAlreadyExists if a node with the same segment name already exists within the     siblings, or if a node with the same ID already exists
+     * @throws \Exception
      */
     public function createNode(NodeId $id, NodeType $type, array $properties, NodeId $parentId, string $segment): void
     {
@@ -158,6 +162,9 @@ final class Workspace
         $type->validateProperties($properties);
 
         $path = $parent->path->append($segment);
+        if (isset($this->pathIndex[(string) $path])) {
+            throw new NodeAlreadyExists('Node already exists at path: '.$path);
+        }
         $node = new Node($id, $this->id, $this->dimensionSet, $type, $path, $properties);
         $key = (string) $id;
         if (isset($this->nodes[$key])) {
@@ -166,6 +173,8 @@ final class Workspace
         $this->nodes[$key] = $node;
         $this->children[$key] = [];
         $this->children[(string) $parentId][] = $key;
+        $this->pathIndex[(string) $path] = $key;
+
         $this->record(new NodeCreated($this->id, $this->dimensionSet, $id, $parentId, strtolower($segment), $path, $type, $properties));
     }
 
@@ -231,6 +240,20 @@ final class Workspace
             }
         }
 
+        foreach ($this->pathIndex as $p => $nid) {
+            if (str_starts_with($p.'/', $oldPath.'/')) {
+                unset($this->pathIndex[$p]);
+                $this->pathIndex[$newPath.$suffix] = $nid;
+            }
+        }
+
+        // rebuild index for new subtree
+        foreach ($this->nodes as $k => $n) {
+            if (str_starts_with((string) $n->path.'/', $newPath.'/') || (string) $n->path === $newPath) {
+                $this->pathIndex[(string) $n->path] = $k;
+            }
+        }
+
         $this->record(new NodeMoved(
             $this->id,
             $this->dimensionSet,
@@ -268,6 +291,11 @@ final class Workspace
 
         $removed = $idsToRemove;
         foreach ($idsToRemove as $key) {
+            foreach ($this->pathIndex as $p => $nid) {
+                if ($nid === $key) {
+                    unset($this->pathIndex[$p]);
+                }
+            }
             unset($this->nodes[$key], $this->children[$key]);
         }
 
@@ -278,6 +306,20 @@ final class Workspace
             $cascade,
             $removed
         ));
+    }
+
+    public function getByPath(NodePath $path): Node
+    {
+        $p = (string) $path;
+        $key = $this->pathIndex[$p] ?? null;
+        if (null === $key) {
+            throw new NodeNotFound('Node not found at path: '.$p);
+        }
+        if (!isset($this->nodes[(string) $key])) {
+            throw new NodeNotFound('Node not found: '.$key);
+        }
+
+        return $this->nodes[(string) $key];
     }
 
     /**

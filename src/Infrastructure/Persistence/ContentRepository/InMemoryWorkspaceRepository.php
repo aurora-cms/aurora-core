@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Aurora\Infrastructure\Persistence\ContentRepository;
 
-use Aurora\Application\ContentRepository\WorkspaceRepository;
+use Aurora\Application\ContentRepository\Port\WorkspaceRepository;
 use Aurora\Domain\ContentRepository\Exception\WorkspaceNotFound;
 use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
