@@ -9,7 +9,7 @@ declare(strict_types=1);
  * License: MIT
  */
 
-namespace Aurora\Application\ContentRepository;
+namespace Aurora\Application\ContentRepository\Port;
 
 use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
