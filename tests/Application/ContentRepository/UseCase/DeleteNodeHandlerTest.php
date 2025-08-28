@@ -67,7 +67,7 @@ final class DeleteNodeHandlerTest extends TestCase
             'b'
         );
         $h = new DeleteNodeHandler($this->repo, $this->tx);
-        $r = $h(new DeleteNodeRequest('draft', [], NodeId::fromString('childnode-1'), true));
+        $r = $h(new DeleteNodeRequest('draft', [], 'childnode-1', true));
         $this->assertSame('childnode-1', $r->nodeId);
         $this->assertTrue($r->cascade);
         $this->assertCount(2, $r->deletedNodeIds);
@@ -79,6 +79,6 @@ final class DeleteNodeHandlerTest extends TestCase
     {
         $h = new DeleteNodeHandler($this->repo, $this->tx);
         $this->expectException(NodeNotFound::class);
-        $h(new DeleteNodeRequest('draft', [], NodeId::fromString('nonexisting-node')));
+        $h(new DeleteNodeRequest('draft', [], 'nonexisting-node'));
     }
 }
