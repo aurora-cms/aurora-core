@@ -36,6 +36,7 @@ final class Workspace
     private NodeId $rootId;
     /** @var array<string,string> map path => nodeId */
     private array $pathIndex = [];
+
     /**
      * @var array<DomainEvent>
      */
@@ -162,9 +163,11 @@ final class Workspace
         $type->validateProperties($properties);
 
         $path = $parent->path->append($segment);
+
         if (isset($this->pathIndex[(string) $path])) {
             throw new NodeAlreadyExists('Node already exists at path: '.$path);
         }
+
         $node = new Node($id, $this->id, $this->dimensionSet, $type, $path, $properties);
         $key = (string) $id;
         if (isset($this->nodes[$key])) {

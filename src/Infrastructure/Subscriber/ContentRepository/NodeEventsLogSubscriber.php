@@ -56,6 +56,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 
     public function onNodePropertySet(NodePropertySet $e): void
     {
+
         $this->logger->info(\sprintf(
             'Node property set: %s, property %s: %s',
             $e->nodeId,
