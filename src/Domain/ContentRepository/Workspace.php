@@ -246,7 +246,7 @@ final class Workspace
         foreach ($this->pathIndex as $p => $nid) {
             if (str_starts_with($p.'/', $oldPath.'/')) {
                 unset($this->pathIndex[$p]);
-                $this->pathIndex[$newPath.$suffix] = $nid;
+                $this->pathIndex[$newPath] = $nid;
             }
         }
 
