@@ -145,7 +145,7 @@ final class Workspace
      * @param NodeId               $parentId   the identifier of the parent node under which this node will be created
      * @param string               $segment    the unique segment name for the node within its siblings
      *
-     * @throws NodeAlreadyExists if a node with the same segment name already exists within the     siblings, or if a node with the same ID already exists
+     * @throws NodeAlreadyExists if a node with the same segment name already exists within the siblings, or if a node with the same ID already exists
      * @throws \Exception
      */
     public function createNode(NodeId $id, NodeType $type, array $properties, NodeId $parentId, string $segment): void
@@ -221,7 +221,7 @@ final class Workspace
             throw new InvalidMove('Cannot move node into its own subtree');
         }
 
-        // Sibling name conflict at new parent
+        // Sibling name conflict with new parent
         $segment = $node->path->name();
         foreach ($this->childrenOf($newParentId) as $sibling) {
             if ($sibling->path->name() === $segment) {
@@ -229,7 +229,7 @@ final class Workspace
             }
         }
 
-        // Update path for the node and all descendants
+        // Update the path for the node and all descendants
         $oldPath = (string) $node->path;
         $newPath = (string) $newParent->path->append($segment);
 
@@ -250,7 +250,7 @@ final class Workspace
             }
         }
 
-        // rebuild index for new subtree
+        // rebuild index for the new subtree
         foreach ($this->nodes as $k => $n) {
             if (str_starts_with($n->path.'/', $newPath.'/') || (string) $n->path === $newPath) {
                 $this->pathIndex[(string) $n->path] = $k;
