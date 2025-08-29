@@ -24,6 +24,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            AuroraPersistence:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Infrastructure/Persistence/ContentRepository/Doctrine/Entity'
+                prefix: 'Aurora\Infrastructure\Persistence\ContentRepository\Doctrine\Entity'
+                alias: AuroraPersistence
         controller_resolver:
             auto_mapping: false
 
