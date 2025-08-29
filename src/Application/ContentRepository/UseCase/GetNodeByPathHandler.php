@@ -27,7 +27,7 @@ final readonly class GetNodeByPathHandler
     /**
      * Constructor.
      *
-     * @param WorkspaceRepository $repo The repository to access workspaces.
+     * @param WorkspaceRepository $repo the repository to access workspaces
      */
     public function __construct(
         private WorkspaceRepository $repo,
@@ -37,10 +37,11 @@ final readonly class GetNodeByPathHandler
     /**
      * Invokes the handler to get a node by its path.
      *
-     * @param string $workspaceId The workspace identifier.
-     * @param array<string, string> $dimensions The dimension set for the query.
-     * @param string $path The path to the node.
-     * @return GetNodeByPathResponse The response containing node details.
+     * @param string                $workspaceId the workspace identifier
+     * @param array<string, string> $dimensions  the dimension set for the query
+     * @param string                $path        the path to the node
+     *
+     * @return GetNodeByPathResponse the response containing node details
      */
     public function __invoke(string $workspaceId, array $dimensions, string $path): GetNodeByPathResponse
     {

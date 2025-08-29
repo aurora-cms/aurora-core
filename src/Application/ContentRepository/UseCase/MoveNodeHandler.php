@@ -60,7 +60,7 @@ final readonly class MoveNodeHandler
 
             $n = $ws->get($nodeId);
 
-            return new MoveNodeResponse((string)$n->id, (string)$n->path);
+            return new MoveNodeResponse((string) $n->id, (string) $n->path);
         });
     }
 }

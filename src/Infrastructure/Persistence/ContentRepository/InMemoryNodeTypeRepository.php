@@ -14,7 +14,6 @@ namespace Aurora\Infrastructure\Persistence\ContentRepository;
 use Aurora\Application\ContentRepository\Port\NodeTypeRepository;
 use Aurora\Domain\ContentRepository\Exception\NodeTypeNotFound;
 use Aurora\Domain\ContentRepository\Type\NodeType;
-use function sprintf;
 
 final class InMemoryNodeTypeRepository implements NodeTypeRepository
 {
@@ -47,7 +46,7 @@ final class InMemoryNodeTypeRepository implements NodeTypeRepository
     public function get(string $name): NodeType
     {
         if (!$this->has($name)) {
-            throw new NodeTypeNotFound(sprintf('Node type "%s" is not registered.', $name));
+            throw new NodeTypeNotFound(\sprintf('Node type "%s" is not registered.', $name));
         }
 
         return $this->types[$name];

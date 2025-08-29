@@ -11,10 +11,6 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Value;
 
-use InvalidArgumentException;
-use Stringable;
-use function sprintf;
-
 /**
  * A single dimension set, e.g. ['locale' => 'en_US', 'device' => 'mobile', 'channel' => 'web'].
  *
@@ -22,7 +18,7 @@ use function sprintf;
  * Dimension keys are normalized to lowercase and trimmed of whitespace.
  * Invalid or empty dimension names/values are not allowed.
  */
-final readonly class DimensionSet implements Stringable
+final readonly class DimensionSet implements \Stringable
 {
     /**
      * Associative array of dimension name => dimension value.
@@ -37,7 +33,7 @@ final readonly class DimensionSet implements Stringable
      *
      * @param array<string, string> $values associative array of dimension name => dimension value
      *
-     * @throws InvalidArgumentException if a dimension name or value is empty or invalid
+     * @throws \InvalidArgumentException if a dimension name or value is empty or invalid
      */
     public function __construct(array $values = [])
     {
@@ -45,10 +41,10 @@ final readonly class DimensionSet implements Stringable
         foreach ($values as $k => $v) {
             $key = strtolower(trim($k));
             if ('' === $key || '' === $v) {
-                throw new InvalidArgumentException('Dimension name and value cannot be empty.');
+                throw new \InvalidArgumentException('Dimension name and value cannot be empty.');
             }
             if (!preg_match('/^[a-z][a-z0-9_\-]*$/', $key)) {
-                throw new InvalidArgumentException(sprintf('Invalid dimension name: "%s". Must start with a letter and contain only letters, numbers, underscores, or hyphens.', $k));
+                throw new \InvalidArgumentException(\sprintf('Invalid dimension name: "%s". Must start with a letter and contain only letters, numbers, underscores, or hyphens.', $k));
             }
             $norm[$key] = $v;
         }

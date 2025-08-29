@@ -26,9 +26,6 @@ use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\NodePath;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\Event\DomainEvent;
-use Exception;
-use InvalidArgumentException;
-use function strlen;
 
 final class Workspace
 {
@@ -52,9 +49,9 @@ final class Workspace
      * @param DimensionSet $dimensionSet the set of dimensions associated with the workspace
      * @param Node         $root         the root node of the workspace
      *
-     * @throws InvalidArgumentException if the root node does not have a root path
-     * @throws InvalidArgumentException if the root node's workspace ID does not match the workspace ID
-     * @throws InvalidArgumentException if the root node's dimension set does not match the workspace dimension set
+     * @throws \InvalidArgumentException if the root node does not have a root path
+     * @throws \InvalidArgumentException if the root node's workspace ID does not match the workspace ID
+     * @throws \InvalidArgumentException if the root node's dimension set does not match the workspace dimension set
      */
     public function __construct(
         public readonly WorkspaceId $id,
@@ -62,18 +59,18 @@ final class Workspace
         Node $root,
     ) {
         if (!$root->path->isRoot()) {
-            throw new InvalidArgumentException('Root node must have root path');
+            throw new \InvalidArgumentException('Root node must have root path');
         }
         if (!$root->workspaceId->equals($this->id)) {
-            throw new InvalidArgumentException('Root workspace mismatch');
+            throw new \InvalidArgumentException('Root workspace mismatch');
         }
         if (!$root->dimensionSet->equals($this->dimensionSet)) {
-            throw new InvalidArgumentException('Root dimension set mismatch');
+            throw new \InvalidArgumentException('Root dimension set mismatch');
         }
         $this->rootId = $root->id;
         $this->nodes[(string) $root->id] = $root;
         $this->children[(string) $root->id] = [];
-        $this->pathIndex[(string) $root->path] = (string)$root->id;
+        $this->pathIndex[(string) $root->path] = (string) $root->id;
     }
 
     /**
@@ -149,7 +146,7 @@ final class Workspace
      * @param string               $segment    the unique segment name for the node within its siblings
      *
      * @throws NodeAlreadyExists if a node with the same segment name already exists within the     siblings, or if a node with the same ID already exists
-     * @throws Exception
+     * @throws \Exception
      */
     public function createNode(NodeId $id, NodeType $type, array $properties, NodeId $parentId, string $segment): void
     {
@@ -241,7 +238,7 @@ final class Workspace
 
         foreach ($this->nodes as $k => $n) {
             if (str_starts_with($n->path.'/', $oldPath.'/') || $n->path->equals($node->path)) {
-                $suffix = substr((string) $n->path, strlen($oldPath));
+                $suffix = substr((string) $n->path, \strlen($oldPath));
                 $this->nodes[$k] = $n->withPath(NodePath::fromString($newPath.$suffix));
             }
         }
