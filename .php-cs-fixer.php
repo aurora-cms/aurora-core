@@ -9,13 +9,13 @@ This file is part of Aurora Core.
 License: MIT
 HDR;
 
-$finder = (new PhpCsFixer\Finder())
+$finder = new PhpCsFixer\Finder()
     ->in(__DIR__ . '/src')
     ->exclude('var')
     ->ignoreVCSIgnored(true)
 ;
 
-return (new PhpCsFixer\Config())
+return new PhpCsFixer\Config()
     ->setParallelConfig(ParallelConfigFactory::detect())
     ->setRiskyAllowed(true)
     ->setRules([

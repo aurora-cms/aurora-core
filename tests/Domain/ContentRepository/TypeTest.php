@@ -2,6 +2,7 @@
 
 namespace Aurora\Tests\Domain\ContentRepository;
 
+use Aurora\Domain\ContentRepository\Exception\UndefinedProperty;
 use Aurora\Domain\ContentRepository\Type\NodeType;
 use Aurora\Domain\ContentRepository\Type\PropertyDefinition;
 use Aurora\Domain\ContentRepository\Type\PropertyType;
@@ -20,7 +21,7 @@ class TypeTest extends TestCase
     {
         $nt = new NodeType('root', [new PropertyDefinition('id', PropertyType::STRING, false)]);
         $this->assertInstanceOf(PropertyDefinition::class, $nt->definition('id'));
-        $this->expectException(\Aurora\Domain\ContentRepository\Exception\UndefinedProperty::class);
+        $this->expectException(UndefinedProperty::class);
         $nt->definition('title');
     }
 

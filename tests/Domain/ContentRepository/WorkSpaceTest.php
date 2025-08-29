@@ -18,6 +18,7 @@ use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\NodePath;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\ContentRepository\Workspace;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 const UUID = '345bf989-2774-4ac3-b117-c7d0dec40675';
@@ -48,7 +49,11 @@ final class WorkSpaceTest extends TestCase
     public function testCreateNodeUnderRoot(): void
     {
         $ws = Workspace::initialize(new WorkspaceId('draft'), DimensionSet::empty(),new NodeId(UUID), $this->defaultType());
-        $ws->createNode(new NodeId(UUID2), $this->defaultType(), ['title' => 'Home'], $ws->root()->id, 'home');
+        try {
+            $ws->createNode(new NodeId(UUID2), $this->defaultType(), ['title' => 'Home'], $ws->root()->id, 'home');
+        } catch (Exception $e) {
+            $this->fail('Exception should not be thrown: ' . $e->getMessage());
+        }
         $children = $ws->childrenOf($ws->root()->id);
         $this->assertCount(1, $children);
         $this->assertSame('/home', (string)$children[0]->path);
@@ -82,7 +87,7 @@ final class WorkSpaceTest extends TestCase
         $ws->move(new NodeId(UUID2), new NodeId(UUID3));
         $childrenB = $ws->childrenOf(new NodeId(UUID3));
         $paths = array_map(fn($n) => (string)$n->path, $childrenB);
-        $this->assertContains('/b/a', $paths);;
+        $this->assertContains('/b/a', $paths);
     }
 
     public function testMoveNodeCannotMoveRoot(): void

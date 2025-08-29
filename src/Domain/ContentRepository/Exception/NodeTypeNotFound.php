@@ -9,11 +9,8 @@ declare(strict_types=1);
  * License: MIT
  */
 
-namespace Aurora\Domain\Event;
+namespace Aurora\Domain\ContentRepository\Exception;
 
-use DateTimeImmutable;
-
-interface DomainEvent
+class NodeTypeNotFound extends \DomainException
 {
-    public function occurredOn(): DateTimeImmutable;
 }

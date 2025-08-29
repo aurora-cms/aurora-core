@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Exception;
 
-class DomainException extends \RuntimeException
+use RuntimeException;
+
+class DomainException extends RuntimeException
 {
 }
