@@ -46,7 +46,7 @@ class InMemoryWorkspaceRepository implements WorkspaceRepository
     {
         $key = $this->key($id, $dimensionSet);
         if (!isset($this->store[$key])) {
-            throw new WorkspaceNotFound("Workspace not found for ID {$id} and dimensions {$dimensionSet}");
+            throw new WorkspaceNotFound("Workspace not found for ID $id and dimensions $dimensionSet");
         }
 
         return $this->store[$key];

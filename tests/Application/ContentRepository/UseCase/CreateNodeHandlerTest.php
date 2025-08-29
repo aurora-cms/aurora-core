@@ -4,6 +4,7 @@ namespace Aurora\Tests\Application\ContentRepository\UseCase;
 
 use Aurora\Application\ContentRepository\Dto\CreateNodeRequest;
 use Aurora\Application\ContentRepository\UseCase\CreateNodeHandler;
+use Aurora\Domain\ContentRepository\Exception\NodeNotFound;
 use Aurora\Domain\ContentRepository\Type\NodeType;
 use Aurora\Domain\ContentRepository\Type\PropertyDefinition;
 use Aurora\Domain\ContentRepository\Type\PropertyType;
@@ -57,7 +58,7 @@ final class CreateNodeHandlerTest extends TestCase
         );
         $repo->save($ws);
         $handler = new CreateNodeHandler($repo, $types, $tx);
-        $this->expectException(\Aurora\Domain\ContentRepository\Exception\NodeNotFound::class);
+        $this->expectException(NodeNotFound::class);
         $handler(new CreateNodeRequest(
             'draft',
             [],

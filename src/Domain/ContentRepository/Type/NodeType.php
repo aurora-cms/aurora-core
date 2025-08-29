@@ -12,13 +12,17 @@ declare(strict_types=1);
 namespace Aurora\Domain\ContentRepository\Type;
 
 use Aurora\Domain\ContentRepository\Exception\UndefinedProperty;
+use Exception;
+use InvalidArgumentException;
+use Stringable;
+use function array_key_exists;
 
 /**
  * Represents a node type in the content repository.
  *
  * @readonly
  */
-final readonly class NodeType implements \Stringable
+final readonly class NodeType implements Stringable
 {
     /**
      * Property definitions for this node type.
@@ -33,12 +37,12 @@ final readonly class NodeType implements \Stringable
      * @param string                    $name        the name of the node type
      * @param array<PropertyDefinition> $definitions list of property definitions
      *
-     * @throws \InvalidArgumentException if the node type name format is invalid
+     * @throws InvalidArgumentException if the node type name format is invalid
      */
     public function __construct(public string $name, array $definitions = [])
     {
         if (!preg_match('/^[a-zA-z][a-zA-Z0-9_.-]*$/', $name)) {
-            throw new \InvalidArgumentException('Node type name format invalid: '.$name);
+            throw new InvalidArgumentException('Node type name format invalid: '.$name);
         }
 
         $defs = [];
@@ -58,7 +62,7 @@ final readonly class NodeType implements \Stringable
      */
     public function has(string $name): bool
     {
-        return \array_key_exists($name, $this->definitions);
+        return array_key_exists($name, $this->definitions);
     }
 
     /**
@@ -73,7 +77,7 @@ final readonly class NodeType implements \Stringable
     public function definition(string $name): PropertyDefinition
     {
         if (!$this->has($name)) {
-            throw new UndefinedProperty("Undefined property '$name' in node type '{$this->name}'");
+            throw new UndefinedProperty("Undefined property '$name' in node type '$this->name'");
         }
 
         return $this->definitions[$name];
@@ -84,7 +88,7 @@ final readonly class NodeType implements \Stringable
      *
      * @param array<string, mixed> $properties properties to validate
      *
-     * @throws \Exception if validation fails for any property
+     * @throws Exception if validation fails for any property
      */
     public function validateProperties(array $properties): void
     {

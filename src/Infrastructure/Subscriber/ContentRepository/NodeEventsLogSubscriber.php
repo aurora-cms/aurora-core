@@ -17,6 +17,7 @@ use Aurora\Domain\ContentRepository\Event\NodePropertySet;
 use Aurora\Domain\ContentRepository\Event\NodeRemoved;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function sprintf;
 
 final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 {
@@ -36,7 +37,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 
     public function onNodeCreated(NodeCreated $e): void
     {
-        $this->logger->info(\sprintf(
+        $this->logger->info(sprintf(
             'Node created: %s (path: %s, type: %s)',
             $e->nodeId,
             $e->path,
@@ -46,7 +47,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 
     public function onNodeMoved(NodeMoved $e): void
     {
-        $this->logger->info(\sprintf(
+        $this->logger->info(sprintf(
             'Node moved: %s from %s to %s',
             $e->nodeId,
             $e->oldPath,
@@ -57,7 +58,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
     public function onNodePropertySet(NodePropertySet $e): void
     {
 
-        $this->logger->info(\sprintf(
+        $this->logger->info(sprintf(
             'Node property set: %s, property %s: %s',
             $e->nodeId,
             $e->name,
@@ -68,7 +69,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
     public function onNodeRemoved(NodeRemoved $e): void
     {
         if ($e->cascade) {
-            $this->logger->info(\sprintf(
+            $this->logger->info(sprintf(
                 'Node removed (cascade): %s (others: %s)',
                 $e->nodeId,
                 json_encode($e->removedNodeIds),
@@ -76,7 +77,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 
             return;
         }
-        $this->logger->info(\sprintf(
+        $this->logger->info(sprintf(
             'Node removed: %s',
             $e->nodeId,
         ));

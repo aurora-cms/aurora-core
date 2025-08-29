@@ -21,16 +21,17 @@ final readonly class GetNodeByPathResponse
     /**
      * Constructor for GetNodeByPathResponse.
      *
-     * @param string $nodeId     the unique identifier of the node
-     * @param string $path       the path of the node
-     * @param string $nodeType   the type of the node
-     * @param array  $properties additional properties of the node
+     * @param string $nodeId the unique identifier of the node
+     * @param string $path the path of the node
+     * @param string $nodeType the type of the node
+     * @param array<string, mixed> $properties additional properties of the node
      */
     public function __construct(
         public string $nodeId,
         public string $path,
         public string $nodeType,
-        public array $properties = [],
-    ) {
+        public array  $properties = [],
+    )
+    {
     }
 }

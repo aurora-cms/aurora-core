@@ -4,6 +4,7 @@ namespace Aurora\Tests\Application\ContentRepository\UseCase;
 
 use Aurora\Application\ContentRepository\Port\WorkspaceRepository;
 use Aurora\Application\ContentRepository\UseCase\GetNodeByPathHandler;
+use Aurora\Domain\ContentRepository\Exception\NodeNotFound;
 use Aurora\Domain\ContentRepository\Type\NodeType;
 use Aurora\Domain\ContentRepository\Type\PropertyDefinition;
 use Aurora\Domain\ContentRepository\Type\PropertyType;
@@ -12,6 +13,7 @@ use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\ContentRepository\Workspace;
 use Aurora\Infrastructure\Persistence\ContentRepository\InMemoryWorkspaceRepository;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class GetNodeByPathHandlerTest extends TestCase
@@ -43,13 +45,17 @@ class GetNodeByPathHandlerTest extends TestCase
 
     public function testGetChildNodeByPath(): void
     {
-        $this->ws->createNode(
-            NodeId::fromString('childnode-1'),
-            new NodeType('document', [new PropertyDefinition('title', PropertyType::STRING, false)]),
-            ['title' => 'Child Node'],
-            NodeId::fromString('rootnode-1'),
-            'child'
-        );
+        try {
+            $this->ws->createNode(
+                NodeId::fromString('childnode-1'),
+                new NodeType('document', [new PropertyDefinition('title', PropertyType::STRING, false)]),
+                ['title' => 'Child Node'],
+                NodeId::fromString('rootnode-1'),
+                'child'
+            );
+        } catch (Exception $e) {
+            $this->fail('Exception should not be thrown: ' . $e->getMessage());
+        }
 
         $handler = new GetNodeByPathHandler($this->repo);
         $response = $handler('draft', [], '/child');
@@ -62,7 +68,7 @@ class GetNodeByPathHandlerTest extends TestCase
     public function testGetNonExistentNodeByPath(): void
     {
         $handler = new GetNodeByPathHandler($this->repo);
-        $this->expectException(\Aurora\Domain\ContentRepository\Exception\NodeNotFound::class);
+        $this->expectException(NodeNotFound::class);
         $handler('draft', [], '/nonexistent');
     }
 }

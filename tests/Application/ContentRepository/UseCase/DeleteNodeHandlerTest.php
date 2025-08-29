@@ -12,13 +12,13 @@ use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\ContentRepository\Workspace;
 use Aurora\Infrastructure\NoopTransactionBoundary;
 use Aurora\Infrastructure\Persistence\ContentRepository\InMemoryWorkspaceRepository;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 final class DeleteNodeHandlerTest extends TestCase
 {
     private InMemoryWorkspaceRepository $repo;
     private NoopTransactionBoundary $tx;
-    private DeleteNodeHandler $handler;
     private Workspace $ws;
 
     protected function setUp(): void
@@ -36,13 +36,26 @@ final class DeleteNodeHandlerTest extends TestCase
 
     public function testDeleteNode(): void
     {
-        $this->ws->createNode(
-            NodeId::fromString('childnode-1'),
-            new NodeType('document'),
-            [],
-            NodeId::fromString('rootnode-1'),
-            'a'
-        );
+        try {
+            $this->ws->createNode(
+                NodeId::fromString('childnode-1'),
+                new NodeType('document'),
+                [],
+                NodeId::fromString('rootnode-1'),
+                'a'
+            );
+            $this->repo->save($this->ws);
+
+            $this->ws->createNode(
+                NodeId::fromString('childnode-1'),
+                new NodeType('document'),
+                [],
+                NodeId::fromString('rootnode-1'),
+                'a'
+            );
+        } catch (Exception $e) {
+            $this->fail('Setup failed: ' . $e->getMessage());
+        }
         $h = new DeleteNodeHandler($this->repo, $this->tx);
         $r = $h(new DeleteNodeRequest('draft', [], NodeId::fromString('childnode-1')));
         $this->assertSame('childnode-1', $r->nodeId);
@@ -52,20 +65,24 @@ final class DeleteNodeHandlerTest extends TestCase
 
     public function testDeleteNodeCascade(): void
     {
-        $this->ws->createNode(
-            NodeId::fromString('childnode-1'),
-            new NodeType('document'),
-            [],
-            NodeId::fromString('rootnode-1'),
-            'a'
-        );
-        $this->ws->createNode(
-            NodeId::fromString('grandchildnode-1'),
-            new NodeType('document'),
-            [],
-            NodeId::fromString('childnode-1'),
-            'b'
-        );
+        try {
+            $this->ws->createNode(
+                NodeId::fromString('childnode-1'),
+                new NodeType('document'),
+                [],
+                NodeId::fromString('rootnode-1'),
+                'a'
+            );
+            $this->ws->createNode(
+                NodeId::fromString('grandchildnode-1'),
+                new NodeType('document'),
+                [],
+                NodeId::fromString('childnode-1'),
+                'b'
+            );
+        } catch (Exception $e) {
+            $this->fail('Setup failed: ' . $e->getMessage());
+        }
         $h = new DeleteNodeHandler($this->repo, $this->tx);
         $r = $h(new DeleteNodeRequest('draft', [], 'childnode-1', true));
         $this->assertSame('childnode-1', $r->nodeId);

@@ -21,9 +21,10 @@ interface TransactionBoundary
     /**
      * Executes the given callback within a transaction boundary.
      *
-     * @param callable $operation the operation to execute within the transaction
+     * @template T the return type of the callable
+     * @param callable(): T $operation the operation to execute within the transaction
      *
-     * @return mixed the result of the callback execution
+     * @return T the result of the callback execution
      */
-    public function run(callable $operation): mixed;
+    public function run(callable $operation);
 }
