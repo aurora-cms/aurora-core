@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Aurora\Infrastructure\Persistence\ContentRepository;
 
-use Aurora\Application\ContentRepository\WorkspaceRepository;
+use Aurora\Application\ContentRepository\Port\WorkspaceRepository;
 use Aurora\Domain\ContentRepository\Exception\WorkspaceNotFound;
 use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
@@ -46,7 +46,7 @@ class InMemoryWorkspaceRepository implements WorkspaceRepository
     {
         $key = $this->key($id, $dimensionSet);
         if (!isset($this->store[$key])) {
-            throw new WorkspaceNotFound("Workspace not found for ID {$id} and dimensions {$dimensionSet}");
+            throw new WorkspaceNotFound("Workspace not found for ID $id and dimensions $dimensionSet");
         }
 
         return $this->store[$key];

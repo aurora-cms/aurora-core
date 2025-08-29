@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Aurora\Domain\ContentRepository\Value;
 
 use Aurora\Domain\ContentRepository\Exception\NodePathInvalid;
+use Stringable;
 
 /**
  * Regular expression for valid node path segments.
@@ -23,7 +24,7 @@ const PATH_REGEX = '/^[a-z0-9][a-z0-9_\-]*$/';
  * Represents a canonical node path in the content repository.
  * Paths are always absolute, start with '/', and do not have trailing slashes except for the root node.
  */
-final class NodePath implements \Stringable
+final class NodePath implements Stringable
 {
     /**
      * @var string Canonical path, e.g. /parent/child/node (no trailing slash, except for root node "/")

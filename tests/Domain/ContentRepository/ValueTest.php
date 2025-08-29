@@ -4,6 +4,7 @@ namespace Aurora\Tests\Domain\ContentRepository;
 
 use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\NodeId;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ValueTest extends TestCase
@@ -41,19 +42,19 @@ class ValueTest extends TestCase
 
     public function testNodeIdToStringIncorrectInvalidId(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new NodeId('invalid id!');
     }
 
     public function testNodeIdToStringIncorrectShortId(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new NodeId('a');
     }
 
     public function testNodeIdToStringEmpty(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new NodeId(' ');
     }
 }

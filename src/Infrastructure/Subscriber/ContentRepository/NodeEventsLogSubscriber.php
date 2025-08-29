@@ -1,5 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Aurora Core.
+ *
+ * (c) The Aurora Core contributors
+ * License: MIT
+ */
+
 namespace Aurora\Infrastructure\Subscriber\ContentRepository;
 
 use Aurora\Domain\ContentRepository\Event\NodeCreated;
@@ -8,6 +17,7 @@ use Aurora\Domain\ContentRepository\Event\NodePropertySet;
 use Aurora\Domain\ContentRepository\Event\NodeRemoved;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use function sprintf;
 
 final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 {
@@ -47,6 +57,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
 
     public function onNodePropertySet(NodePropertySet $e): void
     {
+
         $this->logger->info(sprintf(
             'Node property set: %s, property %s: %s',
             $e->nodeId,
@@ -63,6 +74,7 @@ final readonly class NodeEventsLogSubscriber implements EventSubscriberInterface
                 $e->nodeId,
                 json_encode($e->removedNodeIds),
             ));
+
             return;
         }
         $this->logger->info(sprintf(

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace Aurora\Domain\ContentRepository\Value;
 
+use InvalidArgumentException;
+use Stringable;
+
 /**
  * Value object representing a UUID/ULID NodeId.
  *
@@ -18,25 +21,25 @@ namespace Aurora\Domain\ContentRepository\Value;
  * typically a UUID v4 or ULID-like string. It ensures the value is valid
  * and provides utility methods for comparison and string conversion.
  */
-final readonly class NodeId implements \Stringable
+final readonly class NodeId implements Stringable
 {
     /**
      * Constructs a NodeId from a string value.
      *
      * @param string $value UUID v4 string
      *
-     * @throws \InvalidArgumentException if the value is not a valid UUID v4 or ULID-like string
+     * @throws InvalidArgumentException if the value is not a valid UUID v4 or ULID-like string
      */
     public function __construct(private string $value)
     {
         $v = trim($value);
         if ('' === $v) {
-            throw new \InvalidArgumentException('NodeId cannot be empty.');
+            throw new InvalidArgumentException('NodeId cannot be empty.');
         }
 
         // allow UUID/ULID-like ids
         if (!preg_match('/^[A-Za-z0-9\-]{6,}$/', $v)) {
-            throw new \InvalidArgumentException('NodeId format invalid');
+            throw new InvalidArgumentException('NodeId format invalid');
         }
     }
 
