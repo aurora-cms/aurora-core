@@ -5,7 +5,7 @@
   </component>
   <component name="PHPCSFixerOptionsConfiguration">
     <option name="codingStandard" value="Custom" />
-    <option name="rulesetPath" value="$PROJECT_DIR$/.php-cs-fixer.dist.php" />
+    <option name="rulesetPath" value="$PROJECT_DIR$/.php-cs-fixer.php" />
     <option name="transferred" value="true" />
   </component>
   <component name="PHPCodeSnifferOptionsConfiguration">
@@ -22,6 +22,9 @@
     <phpcs_settings>
       <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="7ffdb1dd-0fce-4185-8da4-a16a1ba0404d" timeout="30000" />
     </phpcs_settings>
+  </component>
+  <component name="PhpExternalFormatter">
+    <option name="externalFormatter" value="PHP_CS_FIXER" />
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
@@ -153,10 +156,13 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <PhpStanConfiguration tool_path="$PROJECT_DIR$/vendor/bin/phpstan" />
-      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="7ffdb1dd-0fce-4185-8da4-a16a1ba0404d" tool_path="$PROJECT_DIR$/vendor/bin/phpstan" timeout="60000" />
+      <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="7ffdb1dd-0fce-4185-8da4-a16a1ba0404d" tool_path="F:\aurora-cms\aurora-core\vendor\bin\phpstan" timeout="60000" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
+    <option name="config" value="F:\aurora-cms\aurora-core\phpstan.dist.neon" />
+    <option name="fullProject" value="true" />
+    <option name="level" value="8" />
     <option name="transferred" value="true" />
   </component>
   <component name="PhpUnit">
