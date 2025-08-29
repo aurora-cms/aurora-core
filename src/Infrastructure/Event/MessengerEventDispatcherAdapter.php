@@ -16,7 +16,7 @@ use Aurora\Domain\Event\DomainEvent;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class MessengerEventDispatcherAdapter implements EventDispatcher
+final readonly class MessengerEventDispatcherAdapter implements EventDispatcher
 {
     public function __construct(private readonly MessageBusInterface $bus)
     {

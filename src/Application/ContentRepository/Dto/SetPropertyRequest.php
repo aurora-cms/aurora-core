@@ -19,18 +19,19 @@ final readonly class SetPropertyRequest
     /**
      * Constructor for SetPropertyRequest.
      *
-     * @param string $workspaceId   the identifier of the workspace
-     * @param array  $dimensions    the dimensions for the node context
-     * @param string $nodeId        the identifier of the node
-     * @param string $propertyName  the name of the property to set
-     * @param mixed  $propertyValue the value to assign to the property
+     * @param string $workspaceId the identifier of the workspace
+     * @param array<string, string> $dimensions the dimensions for the node context
+     * @param string $nodeId the identifier of the node
+     * @param string $propertyName the name of the property to set
+     * @param mixed $propertyValue the value to assign to the property
      */
     public function __construct(
         public string $workspaceId,
-        public array $dimensions,
+        public array  $dimensions,
         public string $nodeId,
         public string $propertyName,
-        public mixed $propertyValue,
-    ) {
+        public mixed  $propertyValue,
+    )
+    {
     }
 }

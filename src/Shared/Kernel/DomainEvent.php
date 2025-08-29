@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Aurora\Shared\Kernel;
 
+use DateTimeImmutable;
+
 interface DomainEvent
 {
-    public function getOccurredOn(): \DateTimeImmutable;
+    public function getOccurredOn(): DateTimeImmutable;
 }

@@ -15,6 +15,7 @@ use Aurora\Domain\ContentRepository\Value\WorkspaceId;
 use Aurora\Domain\ContentRepository\Workspace;
 use Aurora\Infrastructure\NoopTransactionBoundary;
 use Aurora\Infrastructure\Persistence\ContentRepository\InMemoryWorkspaceRepository;
+use Exception;
 use PHPUnit\Framework\TestCase;
 
 class SetPropertyHandlerTest extends TestCase
@@ -30,21 +31,24 @@ class SetPropertyHandlerTest extends TestCase
             WorkspaceId::fromString('draft'),
             DimensionSet::empty(),
             NodeId::fromString('rootnode-1'),
-            new NodeType('root'),
-            []);
+            new NodeType('root'));
         $this->tx = new NoopTransactionBoundary();
         $this->repo->save($this->ws);
     }
 
     public function testSetProperty(): void
     {
-        $this->ws->createNode(
-            NodeId::fromString('parentnode-1'),
-            new NodeType('document', [new PropertyDefinition('title', PropertyType::STRING)]),
-            ['title' => 'Old Title'],
-            NodeId::fromString('rootnode-1'),
-            'node-1'
-        );
+        try {
+            $this->ws->createNode(
+                NodeId::fromString('parentnode-1'),
+                new NodeType('document', [new PropertyDefinition('title', PropertyType::STRING)]),
+                ['title' => 'Old Title'],
+                NodeId::fromString('rootnode-1'),
+                'node-1'
+            );
+        } catch (Exception $e) {
+            $this->fail('Exception should not be thrown: ' . $e->getMessage());
+        }
         $this->repo->save($this->ws);
 
         $h = new SetPropertyHandler($this->repo, $this->tx);
