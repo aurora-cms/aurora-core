@@ -30,7 +30,7 @@ final class DomainEventsTest extends TestCase
     {
         $ws = Workspace::initialize(new WorkspaceId('draft'), DimensionSet::empty(), NodeId::fromString('node-1'), $this->defaultType());
         try {
-            $ws->createNode(NodeId::fromString('node-2'), $this->defaultType(), ['title' => 'Hello'], $ws->root()->id, 'hello');
+            $ws->createNode(NodeId::fromString('node-2'), $this->defaultType(), ['title' => 'Hello'], $ws->root()->id, 'Hello');
         } catch (Exception $e) {
             $this->fail('Exception should not be thrown: ' . $e->getMessage());
         }
@@ -38,6 +38,10 @@ final class DomainEventsTest extends TestCase
         $this->assertNotEmpty($events);
         $this->assertInstanceOf(NodeCreated::class, $events[0]);
         $this->assertInstanceOf(DateTimeImmutable::class, $events[0]->occurredOn());
+        // Assert segment is normalized to lowercase (kills strtolower removal mutant)
+        /** @var NodeCreated $created */
+        $created = $events[0];
+        $this->assertSame('hello', $created->segment);
     }
 
     public function testMoveEmitsNodeMoved(): void
@@ -54,7 +58,15 @@ final class DomainEventsTest extends TestCase
         $ws->move(NodeId::fromString('childnode-a'), NodeId::fromString('childnode-b'));
         $events = $ws->pullEvents();
         $this->assertTrue(array_reduce($events, fn($carry, $e) => $carry || $e instanceof NodeMoved, false));
-        $this->assertInstanceOf(DateTimeImmutable::class, $events[0]->occurredOn());
+        // Find the NodeMoved event and assert occurredOn & parent ids
+        $moved = null;
+        foreach ($events as $e) {
+            if ($e instanceof NodeMoved) { $moved = $e; break; }
+        }
+        $this->assertInstanceOf(NodeMoved::class, $moved);
+        $this->assertInstanceOf(DateTimeImmutable::class, $moved->occurredOn());
+        $this->assertSame('rootnode-1', (string) $moved->oldParentId);
+        $this->assertSame('childnode-b', (string) $moved->newParentId);
     }
 
     public function testRemoveEmitsNodeRemoved(): void
@@ -68,7 +80,12 @@ final class DomainEventsTest extends TestCase
         $ws->remove(new NodeId('childnode-a'), cascade: true);
         $events = $ws->pullEvents();
         $this->assertTrue(array_reduce($events, fn($carry, $e) => $carry || $e instanceof NodeRemoved, false));
-        $this->assertInstanceOf(DateTimeImmutable::class, $events[0]->occurredOn());
+        $removed = null;
+        foreach ($events as $e) {
+            if ($e instanceof NodeRemoved) { $removed = $e; break; }
+        }
+        $this->assertInstanceOf(NodeRemoved::class, $removed);
+        $this->assertInstanceOf(DateTimeImmutable::class, $removed->occurredOn());
     }
 
     public function testSetPropertyEmitsNodePropertySet(): void
@@ -81,8 +98,9 @@ final class DomainEventsTest extends TestCase
         }
         $ws->setProperty(new NodeId('childnode-a'), 'title', 'B');
         $events = $ws->pullEvents();
-        $this->assertInstanceOf(NodePropertySet::class, end($events));
-        $this->assertInstanceOf(DateTimeImmutable::class, $events[0]->occurredOn());
+        $prop = end($events);
+        $this->assertInstanceOf(NodePropertySet::class, $prop);
+        $this->assertInstanceOf(DateTimeImmutable::class, $prop->occurredOn());
     }
 
     public function testPullEventsResetsQueue(): void
