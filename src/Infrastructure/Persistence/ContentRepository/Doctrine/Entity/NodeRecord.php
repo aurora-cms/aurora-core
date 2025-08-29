@@ -47,8 +47,11 @@ class NodeRecord
     #[ORM\Column(type: 'string', length: 190)]
     public string $type;
 
-    // JSON object of properties
+    /**
+     * Undocumented variable
+     * JSON object of properties
+     * @var array<string, mixed>|null
+     */ 
     #[ORM\Column(type: 'json', nullable: true)]
-    public ?array $properties = null;
+    public ?array $properties = null; 
 }
-

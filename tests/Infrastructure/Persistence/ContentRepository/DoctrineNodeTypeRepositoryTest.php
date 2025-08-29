@@ -31,13 +31,13 @@ final class DoctrineNodeTypeRepositoryTest extends NodeTypeRepositoryContractTes
         $classes = [
             $this->em->getClassMetadata(NodeTypeRecord::class),
         ];
-        $tool->updateSchema($classes, true);
+        $tool->updateSchema($classes);
 
         // cleanup table
         $conn = $this->em->getConnection();
         $platform = $conn->getDatabasePlatform();
         $table = $this->em->getClassMetadata(NodeTypeRecord::class)->getTableName();
-        $conn->executeStatement(sprintf('DELETE FROM %s', $platform->quoteIdentifier($table)));
+        $conn->executeStatement(sprintf('DELETE FROM %s', $platform->quoteSingleIdentifier($table)));
     }
 
     protected function createRepository(): \Aurora\Application\ContentRepository\Port\NodeTypeRepository

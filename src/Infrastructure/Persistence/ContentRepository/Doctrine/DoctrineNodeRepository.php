@@ -13,13 +13,13 @@ namespace Aurora\Infrastructure\Persistence\ContentRepository\Doctrine;
 
 use Aurora\Application\ContentRepository\Port\NodeRepository as NodeRepositoryPort;
 use Aurora\Application\ContentRepository\Port\NodeTypeRepository;
+use Aurora\Domain\ContentRepository\Exception\NodeNotFound;
 use Aurora\Domain\ContentRepository\Node;
 use Aurora\Domain\ContentRepository\Type\NodeType;
 use Aurora\Domain\ContentRepository\Value\DimensionSet;
 use Aurora\Domain\ContentRepository\Value\NodeId;
 use Aurora\Domain\ContentRepository\Value\NodePath;
 use Aurora\Domain\ContentRepository\Value\WorkspaceId;
-use Aurora\Domain\ContentRepository\Exception\NodeNotFound;
 use Aurora\Infrastructure\Persistence\ContentRepository\Doctrine\Entity\NodeRecord;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -27,7 +27,7 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private NodeTypeRepository $nodeTypes
+        private NodeTypeRepository $nodeTypes,
     ) {
     }
 
@@ -37,7 +37,7 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
         $rec->id = (string) $node->id;
         $rec->workspace_id = (string) $node->workspaceId;
         $rec->dimensions = (string) $node->dimensionSet;
-        $rec->parent_id = $parentId? (string) $parentId : $rec->parent_id;
+        $rec->parent_id = $parentId ? (string) $parentId : $rec->parent_id;
         $rec->segment = null !== $segment ? strtolower($segment) : $rec->segment;
         $rec->path = (string) $node->path;
         $rec->type = $node->type->name;
@@ -112,11 +112,13 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
     private function hydrate(NodeRecord $r): Node
     {
         $type = $this->resolveType($r->type);
+        /** @var array<string, string> $dims */
+        $dims = $this->parseDimensionsString($r->dimensions);
 
         return new Node(
             NodeId::fromString($r->id),
             WorkspaceId::fromString($r->workspace_id),
-            new DimensionSet($this->parseDimensionsString($r->dimensions)),
+            new DimensionSet($dims),
             $type,
             NodePath::fromString($r->path),
             $r->properties ?? []
@@ -131,7 +133,10 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
     /**
      * Parse DimensionSet string form back to associative array of dimensions.
      * Example: "{channel=web;locale=en_US}" => ['channel' => 'web', 'locale' => 'en_US']
-     * Empty set "{}" => []
+     * Empty set "{}" => [].
+     */
+    /**
+     * @return array<string, string>
      */
     private function parseDimensionsString(string $str): array
     {
@@ -143,6 +148,7 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
         if ('' === $inner) {
             return [];
         }
+        /** @var array<string, string> $result */
         $result = [];
         foreach (explode(';', $inner) as $pair) {
             [$k, $v] = array_map('trim', explode('=', $pair, 2));
@@ -154,4 +160,3 @@ final readonly class DoctrineNodeRepository implements NodeRepositoryPort
         return $result;
     }
 }
-

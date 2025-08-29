@@ -29,7 +29,7 @@ final readonly class DoctrineNodeTypeRepository implements NodeTypeRepository
     {
         $rec = $this->em->find(NodeTypeRecord::class, $type->name) ?? new NodeTypeRecord();
         $rec->name = $type->name;
-        $rec->properties_schema = array_map(
+        $rec->properties_schema = array_values(array_map(
             static function (PropertyDefinition $def): array {
                 return [
                     'name' => $def->name,
@@ -39,7 +39,7 @@ final readonly class DoctrineNodeTypeRepository implements NodeTypeRepository
                 ];
             },
             $type->definitions()
-        );
+        ));
         $this->em->persist($rec);
         $this->em->flush();
     }
@@ -49,7 +49,7 @@ final readonly class DoctrineNodeTypeRepository implements NodeTypeRepository
         /** @var NodeTypeRecord|null $rec */
         $rec = $this->em->find(NodeTypeRecord::class, $name);
         if (null === $rec) {
-            throw new NodeTypeNotFound(sprintf('Node type "%s" is not registered.', $name));
+            throw new NodeTypeNotFound(\sprintf('Node type "%s" is not registered.', $name));
         }
 
         return $this->hydrate($rec);
@@ -70,7 +70,17 @@ final readonly class DoctrineNodeTypeRepository implements NodeTypeRepository
     private function hydrate(NodeTypeRecord $rec): NodeType
     {
         $defs = [];
-        foreach ($rec->properties_schema ?? [] as $raw) {
+        /**
+         * @var list<array{
+         *     name: string,
+         *     type: string,
+         *     nullable?: bool,
+         *     multiple?: bool
+         * }> $schema
+         */
+        $schema = $rec->properties_schema ?? [];
+        foreach ($schema as $raw) {
+            /** @var array{name: string, type: string, nullable?: bool, multiple?: bool} $raw */
             $defs[] = new PropertyDefinition(
                 $raw['name'],
                 PropertyType::from($raw['type']),
