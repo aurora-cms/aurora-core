@@ -94,6 +94,16 @@ final readonly class NodeType implements \Stringable
     }
 
     /**
+     * Returns all property definitions.
+     *
+     * @return array<PropertyDefinition>
+     */
+    public function definitions(): array
+    {
+        return array_values($this->definitions);
+    }
+
+    /**
      * Returns the node type name as a string.
      */
     public function __toString(): string

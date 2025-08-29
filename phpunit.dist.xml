@@ -15,11 +15,14 @@
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data_test.db" force="true" />
     </php>
 
     <testsuites>
         <testsuite name="Domain">
             <directory>tests</directory>
+            <exclude>tests/Application/ContentRepository/Port/NodeRepositoryContractTest.php</exclude>
+            <exclude>tests/Application/ContentRepository/Port/NodeTypeRepositoryContractTest.php</exclude>
         </testsuite>
     </testsuites>
 
