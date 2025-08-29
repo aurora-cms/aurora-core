@@ -47,11 +47,11 @@ final class DeleteNodeHandlerTest extends TestCase
             $this->repo->save($this->ws);
 
             $this->ws->createNode(
-                NodeId::fromString('childnode-1'),
+                NodeId::fromString('childnode-2'),
                 new NodeType('document'),
                 [],
                 NodeId::fromString('rootnode-1'),
-                'a'
+                'b'
             );
         } catch (Exception $e) {
             $this->fail('Setup failed: ' . $e->getMessage());
