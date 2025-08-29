@@ -34,7 +34,7 @@ final class DoctrineNodeRepositoryTest extends NodeRepositoryContractTest
             $this->em->getClassMetadata(NodeRecord::class),
             $this->em->getClassMetadata(NodeTypeRecord::class),
         ];
-        $tool->updateSchema($classes, true);
+        $tool->updateSchema($classes);
 
         $conn = $this->em->getConnection();
         $platform = $conn->getDatabasePlatform();

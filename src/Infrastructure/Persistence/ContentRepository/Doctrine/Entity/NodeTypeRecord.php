@@ -21,8 +21,14 @@ class NodeTypeRecord
     #[ORM\Column(type: 'string', length: 190)]
     public string $name;
 
-    // JSON array: [{name, type, nullable, multiple}]
+    /**
+     * @var list<array{
+     *     name: string,
+     *     type: string,
+     *     nullable?: bool,
+     *     multiple?: bool
+     * }> | null
+     */
     #[ORM\Column(type: 'json', nullable: true)]
     public ?array $properties_schema = null;
 }
-

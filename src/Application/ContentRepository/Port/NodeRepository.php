@@ -46,4 +46,3 @@ interface NodeRepository
      */
     public function childrenOf(NodeId $parentId): array;
 }
-
