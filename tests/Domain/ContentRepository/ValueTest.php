@@ -55,6 +55,15 @@ class ValueTest extends TestCase
     public function testNodeIdToStringEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('NodeId cannot be empty.');
         new NodeId(' ');
+    }
+
+    public function testNodeIdRejectsLeadingInvalidChars(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('NodeId format invalid');
+        // leading '@' is invalid though the tail is valid; caret removal would allow it
+        new NodeId('@abcdef');
     }
 }

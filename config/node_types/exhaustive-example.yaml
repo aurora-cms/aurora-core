@@ -1,0 +1,27 @@
+exhaustive-base:
+  properties:
+    stringValue: { type: string }
+    nullableString: { type: string, nullable: true }
+    intValue: { type: int }
+    floatValue: { type: float }
+    boolValue: { type: bool }
+    datetimeValue: { type: datetime, nullable: true }
+    jsonValue: { type: json, nullable: true }
+    arrayValue: { type: array, nullable: true }
+    referenceId: { type: reference }
+    stringList: { type: string, multiple: true }
+    intList: { type: int, multiple: true }
+    floatList: { type: float, multiple: true }
+    boolList: { type: bool, multiple: true }
+    datetimeList: { type: datetime, multiple: true }
+    jsonList: { type: json, multiple: true }
+    references: { type: reference, multiple: true }
+
+exhaustive-example:
+  extends: exhaustive-base
+  properties:
+    # Override an inherited property to allow nulls
+    stringValue: { type: string, nullable: true }
+    # Add a new extra field
+    extraProperty: { type: json }
+
